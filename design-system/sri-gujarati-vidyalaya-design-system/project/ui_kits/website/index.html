@@ -1,0 +1,89 @@
+<!-- @dsCard group="Website" viewport="1440x900" name="Website — full site" subtitle="Heritage homepage + Admissions, Heritage, Academics, Gallery, Contact" -->
+<!-- @startingPoint section="Website" subtitle="Full heritage school website — multi-page click-through" viewport="1440x900" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sri Gujarati Vidyalaya — Website UI Kit</title>
+<link rel="stylesheet" href="../../styles.css">
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<style>
+  html, body { margin: 0; }
+  /* Responsive collapses */
+  @media (max-width: 900px) {
+    .desk-nav { display: none !important; }
+    .burger { display: block !important; }
+    .about-grid, .fac-layout, .principal-grid, .enq-grid, .contact-grid { grid-template-columns: 1fr !important; }
+    .cards-4, .glance-grid, .trust-grid { grid-template-columns: repeat(2,1fr) !important; }
+    .cards-3, .cards-2, .cards-6 { grid-template-columns: 1fr !important; }
+    .masonry { column-count: 2 !important; }
+    .ft-grid { grid-template-columns: 1fr 1fr !important; }
+  }
+  @media (min-width: 901px) { .mobile-nav { display: none !important; } }
+  @media (max-width: 560px) {
+    .cards-4, .glance-grid, .trust-grid, .fac-grid, .ft-grid { grid-template-columns: 1fr !important; }
+    .masonry { column-count: 1 !important; }
+    .hero-strip { grid-template-columns: 1fr !important; }
+  }
+  @keyframes kenburns { from { transform: scale(1.08); } to { transform: scale(1.0); } }
+  @keyframes revealUp { from { transform: translateY(24px); } to { transform: translateY(0); } }
+  @keyframes scrollcue { 0%,100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(7px); opacity: 1; } }
+  @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+  .hero-bg { animation: kenburns 14s var(--ease-out) forwards; }
+  article img, .fac-layout img { transition: transform var(--dur-slow) var(--ease-out); }
+  .scroll-cue { animation: scrollcue 1.8s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .hero-bg, .scroll-cue { animation: none !important; } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel" src="HomeParts1.jsx"></script>
+<script type="text/babel" src="HomeParts2.jsx"></script>
+<script type="text/babel" src="HomePage.jsx"></script>
+<script type="text/babel" src="HeritagePage.jsx"></script>
+<script type="text/babel" src="AcademicsPage.jsx"></script>
+<script type="text/babel" src="AdmissionsPage.jsx"></script>
+<script type="text/babel" src="GalleryPage.jsx"></script>
+<script type="text/babel" src="ContactPage.jsx"></script>
+<script type="text/babel">
+  const { useState, useEffect } = React;
+  const { SiteHeader, SiteFooter, QuickActions } = window;
+
+  function App() {
+    const [page, setPage] = useState("home");
+    const navigate = (id) => {
+      setPage(id);
+      window.scrollTo({ top: 0, behavior: "auto" });
+    };
+    const PAGES = {
+      home: window.HomePage,
+      about: window.HeritagePage,
+      academics: window.AcademicsPage,
+      admissions: window.AdmissionsPage,
+      gallery: window.GalleryPage,
+      contact: window.ContactPage,
+    };
+    const Current = PAGES[page] || window.HomePage;
+    return (
+      <div style={{ background: "var(--surface-page)" }}>
+        <SiteHeader current={page} onNavigate={navigate} />
+        <main><Current onNavigate={navigate} /></main>
+        <SiteFooter onNavigate={navigate} />
+        <QuickActions onNavigate={navigate} />
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

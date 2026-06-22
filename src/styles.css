@@ -1,0 +1,246 @@
+/* ============================================================
+   Sri Gujarati Vidyalaya — Global Stylesheet
+   ============================================================ */
+
+/* ---- Fonts ---- */
+/* Loaded in index.html via Google Fonts */
+
+/* ---- Color tokens ---- */
+:root {
+  --maroon-950: #3A1607;
+  --maroon-900: #4F1E0C;
+  --maroon-800: #642811;
+  --maroon-700: #7A3414;
+  --maroon-600: #8F4019;
+  --maroon-500: #A65326;
+  --maroon-400: #C0703F;
+  --maroon-300: #D89A72;
+  --maroon-200: #ECC6AC;
+  --maroon-100: #F6E3D5;
+  --maroon-50:  #FBF1E9;
+
+  --gold-800: #6F4E13;
+  --gold-700: #8A661F;
+  --gold-600: #A67D2C;
+  --gold-500: #C29A45;
+  --gold-400: #D6B36A;
+  --gold-300: #E7CE9A;
+  --gold-200: #F2E4C4;
+  --gold-100: #F8F0DC;
+
+  --cream-50:  #FCF9F3;
+  --cream-100: #F6F1E7;
+  --cream-200: #EDE4D5;
+  --sand-300:  #E0D3BF;
+  --sand-400:  #C9B89E;
+
+  --ink-950: #160F09;
+  --ink-900: #241A11;
+  --ink-800: #33271B;
+  --ink-700: #44382C;
+  --ink-500: #6E6052;
+  --ink-400: #948676;
+  --ink-300: #B6A998;
+  --white: #FFFFFF;
+
+  --green-600: #3E7A4F;
+  --green-100: #E4EFE6;
+  --amber-600: #B07A1E;
+  --amber-100: #F6ECD4;
+  --red-600:   #B23A28;
+  --red-100:   #F6E2DC;
+  --blue-600:  #2E5E8C;
+  --blue-100:  #DEE9F2;
+
+  /* Semantic */
+  --brand:          var(--maroon-700);
+  --brand-hover:    var(--maroon-800);
+  --brand-active:   var(--maroon-900);
+  --brand-soft:     var(--maroon-100);
+  --brand-tint:     var(--maroon-50);
+  --accent:         var(--gold-500);
+  --accent-strong:  var(--gold-700);
+  --accent-soft:    var(--gold-100);
+
+  --surface-page:    var(--cream-50);
+  --surface-card:    var(--white);
+  --surface-raised:  var(--cream-100);
+  --surface-sunken:  var(--cream-200);
+  --surface-inverse: var(--maroon-900);
+  --surface-brand:   var(--maroon-700);
+
+  --text-primary:   var(--ink-900);
+  --text-secondary: var(--ink-500);
+  --text-muted:     var(--ink-400);
+  --text-brand:     var(--maroon-700);
+  --text-accent:    var(--gold-700);
+  --text-on-brand:  var(--cream-50);
+
+  --border-subtle:  var(--sand-300);
+  --border-strong:  var(--sand-400);
+  --border-brand:   var(--maroon-200);
+  --border-on-dark: rgba(252,249,243,0.16);
+  --focus-ring:     var(--gold-500);
+
+  /* Typography */
+  --font-display: "Newsreader", "Georgia", "Times New Roman", serif;
+  --font-serif:   "Newsreader", "Georgia", serif;
+  --font-sans:    "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --text-hero:    clamp(2.75rem, 1.6rem + 5.2vw, 5rem);
+  --text-section: clamp(2rem, 1.3rem + 3vw, 3.25rem);
+  --text-lead:    clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+  --text-xl:  1.25rem;
+  --text-lg:  1.125rem;
+  --text-base:1rem;
+  --text-sm:  0.875rem;
+  --text-xs:  0.75rem;
+
+  /* Spacing */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --section-y: clamp(4rem, 2rem + 7vw, 8rem);
+
+  /* Radius */
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-2xl:  32px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(36,22,10,.06);
+  --shadow-sm: 0 2px 8px rgba(36,22,10,.07);
+  --shadow-md: 0 8px 24px -6px rgba(36,22,10,.12);
+  --shadow-lg: 0 20px 48px -14px rgba(36,22,10,.18);
+  --shadow-xl: 0 36px 72px -20px rgba(36,22,10,.22);
+  --shadow-brand: 0 18px 44px -14px rgba(122,52,20,.40);
+  --shadow-inset-hairline: inset 0 0 0 1px rgba(36,22,10,.06);
+
+  /* Motion */
+  --ease-out:    cubic-bezier(.22,1,.36,1);
+  --ease-in-out: cubic-bezier(.65,0,.35,1);
+  --dur-fast: 150ms;
+  --dur:      240ms;
+  --dur-slow: 420ms;
+
+  /* Layout */
+  --container-sm:  720px;
+  --container-md:  960px;
+  --container-lg:  1200px;
+  --container-xl:  1440px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+}
+
+/* ---- Reset & base ---- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--surface-page);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  margin: 0;
+  text-wrap: balance;
+}
+p { margin: 0; text-wrap: pretty; }
+a { color: var(--text-brand); text-decoration: none; }
+img { max-width: 100%; display: block; }
+button,input,select,textarea { font: inherit; color: inherit; }
+::selection { background: var(--gold-200); color: var(--ink-900); }
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+/* ---- Layout helpers ---- */
+.container {
+  width: 100%;
+  max-width: var(--container-lg);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.container--wide   { max-width: var(--container-xl); }
+.container--narrow { max-width: var(--container-md); }
+.section { padding-block: var(--section-y); }
+
+/* ---- Eyebrow / kicker ---- */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-brand);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ---- Animations ---- */
+@keyframes kenburns  { from { transform: scale(1.08) } to { transform: scale(1) } }
+@keyframes revealUp  { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes scrollcue { 0%,100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(7px); opacity: 1; } }
+
+.hero-bg { animation: kenburns 14s var(--ease-out) forwards; }
+.scroll-cue { animation: scrollcue 1.8s ease-in-out infinite; }
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .7s var(--ease-out), transform .7s var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg,.scroll-cue { animation: none !important; }
+  .reveal { opacity: 1; transform: none; transition: none !important; }
+}
+
+/* ---- Responsive grid helpers ---- */
+@media (max-width: 900px) {
+  .desk-nav { display: none !important; }
+  .burger   { display: flex !important; }
+  .about-grid,.fac-layout,.principal-grid,.enq-grid,.contact-grid { grid-template-columns: 1fr !important; }
+  .cards-4,.glance-grid,.trust-grid { grid-template-columns: repeat(2,1fr) !important; }
+  .cards-3,.cards-2,.cards-6 { grid-template-columns: 1fr !important; }
+  .masonry { column-count: 2 !important; }
+  .ft-grid { grid-template-columns: 1fr 1fr !important; }
+}
+@media (min-width: 901px) { .mobile-nav { display: none !important; } }
+@media (max-width: 560px) {
+  .cards-4,.glance-grid,.trust-grid,.fac-grid,.ft-grid { grid-template-columns: 1fr !important; }
+  .masonry { column-count: 1 !important; }
+  .hero-strip { grid-template-columns: 1fr !important; }
+}
+
+/* article img hover (news cards) */
+article img { transition: transform var(--dur-slow) var(--ease-out); }

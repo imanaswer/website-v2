@@ -1,0 +1,95 @@
+/* ============================================================
+   COLORS — Sri Gujarati Vidyalaya
+   Heritage palette: warm sienna-maroon (from the 1869 crest),
+   prestige gold, and parchment neutrals.
+   ============================================================ */
+
+:root {
+  /* ---- Brand: maroon / sienna (sampled from the school crest) ---- */
+  --maroon-950: #3A1607;
+  --maroon-900: #4F1E0C;
+  --maroon-800: #642811;
+  --maroon-700: #7A3414; /* primary brand */
+  --maroon-600: #8F4019;
+  --maroon-500: #A65326;
+  --maroon-400: #C0703F;
+  --maroon-300: #D89A72;
+  --maroon-200: #ECC6AC;
+  --maroon-100: #F6E3D5;
+  --maroon-50:  #FBF1E9;
+
+  /* ---- Accent: heritage gold / ochre ---- */
+  --gold-800: #6F4E13;
+  --gold-700: #8A661F;
+  --gold-600: #A67D2C;
+  --gold-500: #C29A45; /* accent */
+  --gold-400: #D6B36A;
+  --gold-300: #E7CE9A;
+  --gold-200: #F2E4C4;
+  --gold-100: #F8F0DC;
+
+  /* ---- Warm neutrals / parchment ---- */
+  --cream-50:  #FCF9F3;
+  --cream-100: #F6F1E7;
+  --cream-200: #EDE4D5;
+  --sand-300:  #E0D3BF;
+  --sand-400:  #C9B89E;
+
+  /* ---- Ink (warm dark) ---- */
+  --ink-950: #160F09;
+  --ink-900: #241A11;
+  --ink-800: #33271B;
+  --ink-700: #44382C;
+  --ink-500: #6E6052;
+  --ink-400: #948676;
+  --ink-300: #B6A998;
+  --white: #FFFFFF;
+
+  /* ---- Status ---- */
+  --green-600: #3E7A4F;
+  --green-100: #E4EFE6;
+  --amber-600: #B07A1E;
+  --amber-100: #F6ECD4;
+  --red-600:   #B23A28;
+  --red-100:   #F6E2DC;
+  --blue-600:  #2E5E8C;
+  --blue-100:  #DEE9F2;
+
+  /* ============================================================
+     SEMANTIC ALIASES — prefer these in components
+     ============================================================ */
+  --brand:          var(--maroon-700);
+  --brand-hover:    var(--maroon-800);
+  --brand-active:   var(--maroon-900);
+  --brand-strong:   var(--maroon-900);
+  --brand-soft:     var(--maroon-100);
+  --brand-tint:     var(--maroon-50);
+
+  --accent:         var(--gold-500);
+  --accent-strong:  var(--gold-700);
+  --accent-soft:    var(--gold-100);
+
+  --surface-page:    var(--cream-50);
+  --surface-card:    var(--white);
+  --surface-raised:  var(--cream-100);
+  --surface-sunken:  var(--cream-200);
+  --surface-inverse: var(--maroon-900);
+  --surface-brand:   var(--maroon-700);
+  --surface-accent:  var(--gold-100);
+
+  --text-primary:   var(--ink-900);
+  --text-secondary: var(--ink-500);
+  --text-muted:     var(--ink-400);
+  --text-brand:     var(--maroon-700);
+  --text-accent:    var(--gold-700);
+  --text-on-brand:  var(--cream-50);
+  --text-on-accent: var(--ink-900);
+
+  --border-subtle:  var(--sand-300);
+  --border-strong:  var(--sand-400);
+  --border-brand:   var(--maroon-200);
+  --border-on-dark: rgba(252, 249, 243, 0.16);
+
+  --focus-ring:     var(--gold-500);
+  --overlay-scrim:  rgba(36, 26, 17, 0.55);
+}

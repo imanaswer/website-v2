@@ -1,0 +1,27 @@
+<!-- @dsCard group="Colors" viewport="700x200" name="Neutrals — Parchment & Ink" subtitle="Warm page, card and ink tones" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; padding: 22px; background: var(--surface-page); font-family: var(--font-sans); }
+  .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  .cell { border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow-inset-hairline); }
+  .sw { height: 64px; }
+  .t { padding: 7px 8px; font-size: 11px; }
+  .t b { display: block; color: var(--text-primary); font-weight: 600; }
+  .t span { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="cell"><div class="sw" style="background:var(--cream-50);box-shadow:var(--shadow-inset-hairline)"></div><div class="t"><b>page</b><span>cream-50</span></div></div>
+    <div class="cell"><div class="sw" style="background:var(--cream-100)"></div><div class="t"><b>raised</b><span>cream-100</span></div></div>
+    <div class="cell"><div class="sw" style="background:var(--cream-200)"></div><div class="t"><b>sunken</b><span>cream-200</span></div></div>
+    <div class="cell"><div class="sw" style="background:var(--sand-300)"></div><div class="t"><b>border</b><span>sand-300</span></div></div>
+    <div class="cell"><div class="sw" style="background:var(--ink-500)"></div><div class="t"><b>2ndary</b><span>ink-500</span></div></div>
+    <div class="cell"><div class="sw" style="background:var(--ink-900)"></div><div class="t"><b>text</b><span>ink-900</span></div></div>
+  </div>
+</body>
+</html>
