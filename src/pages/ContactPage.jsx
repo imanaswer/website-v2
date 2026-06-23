@@ -1,32 +1,119 @@
 import { useState } from "react";
 import { Icon } from "../components/Icon";
 import { Reveal } from "../components/Reveal";
-import { Kicker } from "../components/Kicker";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { Select } from "../components/Select";
 import { PageHero } from "../components/PageHero";
+import { Label } from "../components/Ed";
 
 const IMG = {
   campus: "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/gujarati-school.jpg",
 };
 
+function Details() {
+  const rows = [
+    { k: "Address", v: ["Beach Road, Mananchira", "Kozhikode, Kerala 673032"] },
+    { k: "Phone",   v: ["0495 236 5215"] },
+    { k: "Hours",   v: ["Monday – Saturday", "9:00 am – 4:00 pm"] },
+    { k: "Email",   v: ["info@srigujaratividyalaya.com", "admissions@srigujaratividyalaya.com"] },
+  ];
+  return (
+    <section className="section">
+      <div className="container container--wide">
+        <div className="ed-split" style={{ display: "grid", gridTemplateColumns: "3fr 9fr", gap: "var(--space-16)" }}>
+          <aside className="ed-aside" style={{ position: "sticky", top: 110, alignSelf: "start" }}>
+            <Reveal>
+              <Label>Find Us</Label>
+              <div className="rule--gold" style={{ margin: "1.1rem 0" }} />
+            </Reveal>
+          </aside>
+          <div className="index-list">
+            {rows.map((r, i) => (
+              <Reveal key={r.k} delay={i * 60}>
+                <div className="index-row ed-index-row" style={{ display: "grid", gridTemplateColumns: "1fr 3fr", gap: "var(--space-10)", padding: "clamp(1.3rem,2.2vw,1.9rem) 0", alignItems: "baseline" }}>
+                  <dt className="label">{r.k}</dt>
+                  <dd style={{ margin: 0 }}>
+                    {r.v.map((line) => (
+                      <div key={line} style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.25rem,1.05rem + 0.6vw,1.6rem)", color: "var(--text-primary)", lineHeight: 1.4 }}>{line}</div>
+                    ))}
+                  </dd>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function VisitAndMap() {
+  const [sent, setSent] = useState(false);
+  return (
+    <section className="section" style={{ background: "var(--surface-raised)", paddingTop: 0 }}>
+      <div className="container container--wide" style={{ paddingTop: "var(--section-y)" }}>
+        <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-12)", alignItems: "stretch" }}>
+          <Reveal>
+            <div>
+              <Label>Book a Visit</Label>
+              <h2 style={{ fontSize: "var(--text-section)", fontWeight: 400, margin: "1rem 0 1.8rem", maxWidth: "16ch" }}>
+                Come and see our campus
+              </h2>
+              {sent ? (
+                <div style={{ padding: "1.5rem 0" }}>
+                  <Icon name="check-circle" weight="fill" size={44} style={{ color: "var(--green-600)", marginBottom: "0.8rem" }} />
+                  <h3 style={{ fontSize: "1.5rem", fontWeight: 400 }}>Visit requested</h3>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.1rem", color: "var(--text-secondary)", marginTop: "0.4rem" }}>We'll confirm your slot by phone shortly.</p>
+                </div>
+              ) : (
+                <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} style={{ display: "flex", flexDirection: "column", gap: "1.2rem", maxWidth: 460 }}>
+                  <Input label="Your name" required placeholder="Full name" />
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.2rem" }}>
+                    <Input label="Mobile" type="tel" required placeholder="10-digit number" icon={<Icon name="phone" size={16} />} />
+                    <Input label="Preferred date" type="date" />
+                  </div>
+                  <Select label="Reason for visit" placeholder="Select" options={["Admission enquiry", "Campus tour", "Meet the principal", "Careers / other"]} />
+                  <Button type="submit" size="lg" iconRight={<Icon name="arrow-right" size={18} />} style={{ alignSelf: "flex-start" }}>Request a visit</Button>
+                </form>
+              )}
+            </div>
+          </Reveal>
+          <Reveal delay={120}>
+            <div className="photo-frame" style={{ overflow: "hidden", height: "100%", minHeight: 380, position: "relative", background: "var(--surface-sunken)" }}>
+              <iframe
+                title="Map to Sri Gujarati Vidyalaya, Mananchira, Kozhikode"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=75.77%2C11.24%2C75.80%2C11.27&layer=mapnik&marker=11.2588%2C75.7804"
+                style={{ width: "100%", height: "100%", border: 0, filter: "saturate(0.8) sepia(0.06)" }}
+              />
+              <div style={{ position: "absolute", left: 16, bottom: 16, background: "var(--surface-card)", padding: "0.85rem 1.1rem", boxShadow: "var(--shadow-md)", display: "flex", gap: "0.7rem", alignItems: "center", border: "1px solid var(--border-subtle)" }}>
+                <Icon name="map-pin" weight="fill" size={20} style={{ color: "var(--maroon-700)" }} />
+                <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.95rem", fontWeight: 600 }}>Mananchira, Kozhikode</span>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Newsletter() {
   const [done, setDone] = useState(false);
   return (
-    <section className="section" style={{ paddingTop: 0 }}>
+    <section className="section">
       <div className="container container--wide">
         <Reveal>
-          <div style={{ borderRadius: "var(--radius-2xl)", background: "var(--surface-raised)", border: "1px solid var(--border-subtle)", padding: "clamp(2rem,4vw,3.5rem)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "var(--space-12)", flexWrap: "wrap" }}>
-            <div style={{ maxWidth: "34ch" }}>
-              <Kicker>Stay in the loop</Kicker>
-              <h2 style={{ fontSize: "var(--text-section)", fontWeight: 500, margin: "0.8rem 0 0.6rem" }}>School newsletter</h2>
-              <p style={{ fontFamily: "var(--font-sans)", color: "var(--text-secondary)", fontSize: "1rem", lineHeight: 1.6 }}>Events, results and stories from campus — a few times a term, never spam.</p>
+          <div className="ed-2col" style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "var(--space-12)", alignItems: "center", borderTop: "1px solid var(--border-strong)", borderBottom: "1px solid var(--border-strong)", padding: "clamp(2.2rem,4vw,3.5rem) 0" }}>
+            <div>
+              <Label>Stay in Touch</Label>
+              <h2 style={{ fontSize: "clamp(1.8rem,1.3rem + 2vw,2.8rem)", fontWeight: 400, margin: "1rem 0 0.8rem", maxWidth: "16ch" }}>The school newsletter</h2>
+              <p style={{ fontFamily: "var(--font-sans)", color: "var(--text-secondary)", fontSize: "1.15rem", lineHeight: 1.6, maxWidth: "40ch" }}>Events, results and stories from campus — a few times a term, never spam.</p>
             </div>
-            <form onSubmit={(e) => { e.preventDefault(); setDone(true); }} style={{ display: "flex", gap: "0.7rem", flex: 1, minWidth: 280, maxWidth: 460, alignItems: "flex-start" }}>
+            <form onSubmit={(e) => { e.preventDefault(); setDone(true); }} style={{ display: "flex", gap: "0.7rem", alignItems: "flex-start" }}>
               {done ? (
-                <div style={{ fontFamily: "var(--font-sans)", color: "var(--green-600)", fontWeight: 600, display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                  <Icon name="check-circle" weight="fill" size={22} /> You're subscribed — thank you!
+                <div style={{ fontFamily: "var(--font-sans)", color: "var(--green-600)", fontWeight: 600, fontSize: "1.1rem", display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                  <Icon name="check-circle" weight="fill" size={22} /> You're subscribed — thank you.
                 </div>
               ) : (
                 <>
@@ -43,81 +130,14 @@ function Newsletter() {
 }
 
 export function ContactPage({ onNavigate }) {
-  const [sent, setSent] = useState(false);
-  const cards = [
-    { i: "map-pin",          t: "Visit us", lines: ["Beach Road, Mananchira", "Kozhikode, Kerala 673032"] },
-    { i: "phone",            t: "Call us",  lines: ["0495 236 5215", "Mon–Sat, 9am – 4pm"] },
-    { i: "envelope-simple",  t: "Email",    lines: ["info@srigujaratividyalaya.com", "admissions@srigujaratividyalaya.com"] },
-  ];
-
   return (
     <div>
-      <PageHero onNavigate={onNavigate} crumb="Contact" eyebrow="Get in touch"
-        title="We'd love to hear from you"
-        lead="Questions about admissions, a campus visit, or careers at Gujarati Vidyalaya — reach out and we'll respond promptly."
+      <PageHero onNavigate={onNavigate} crumb="Contact" eyebrow="Get in Touch"
+        title="Visit us at Mananchira"
+        lead="Questions about admissions, a campus visit, or careers at Sri Gujarati Vidyalaya — reach out, and we'll respond promptly."
         image={IMG.campus} />
-
-      <section className="section">
-        <div className="container container--wide">
-          <div className="cards-3" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "var(--space-6)", marginBottom: "var(--space-12)" }}>
-            {cards.map((c, i) => (
-              <Reveal key={c.t} delay={i * 80}>
-                <div style={{ background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", padding: "1.8rem", boxShadow: "var(--shadow-sm)", height: "100%" }}>
-                  <div style={{ width: 50, height: 50, borderRadius: "var(--radius-md)", background: "var(--maroon-50)", color: "var(--maroon-700)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.1rem" }}>
-                    <Icon name={c.i} size={26} />
-                  </div>
-                  <h3 style={{ fontSize: "1.2rem", fontWeight: 600, marginBottom: "0.6rem" }}>{c.t}</h3>
-                  {c.lines.map((l) => (
-                    <div key={l} style={{ fontFamily: "var(--font-sans)", fontSize: "0.95rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>{l}</div>
-                  ))}
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "var(--space-12)", alignItems: "stretch" }}>
-            <Reveal>
-              <div style={{ background: "var(--surface-card)", borderRadius: "var(--radius-xl)", padding: "clamp(1.5rem,3vw,2.4rem)", boxShadow: "var(--shadow-lg)", border: "1px solid var(--border-subtle)", height: "100%" }}>
-                <Kicker>Book a campus visit</Kicker>
-                <h2 style={{ fontSize: "1.8rem", fontWeight: 500, margin: "0.8rem 0 1.4rem" }}>Come and see our campus</h2>
-                {sent ? (
-                  <div style={{ textAlign: "center", padding: "1.5rem 0" }}>
-                    <span style={{ width: 60, height: 60, borderRadius: "50%", background: "var(--green-100)", color: "var(--green-600)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem" }}>
-                      <Icon name="check-circle" weight="fill" size={36} />
-                    </span>
-                    <h3 style={{ fontSize: "1.4rem", fontWeight: 600 }}>Visit requested</h3>
-                    <p style={{ fontFamily: "var(--font-sans)", color: "var(--text-secondary)", marginTop: "0.4rem" }}>We'll confirm your slot by phone shortly.</p>
-                  </div>
-                ) : (
-                  <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-                    <Input label="Your name" required placeholder="Full name" />
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.1rem" }}>
-                      <Input label="Mobile" required placeholder="10-digit number" icon={<Icon name="phone" size={16} />} />
-                      <Input label="Preferred date" type="date" />
-                    </div>
-                    <Select label="Reason for visit" placeholder="Select" options={["Admission enquiry","Campus tour","Meet the principal","Careers / other"]} />
-                    <Button type="submit" size="lg" fullWidth iconRight={<Icon name="arrow-right" size={18} />}>Request a Visit</Button>
-                  </form>
-                )}
-              </div>
-            </Reveal>
-            <Reveal delay={120}>
-              <div style={{ borderRadius: "var(--radius-xl)", overflow: "hidden", boxShadow: "var(--shadow-md)", border: "1px solid var(--border-subtle)", height: "100%", minHeight: 360, position: "relative", background: "var(--surface-sunken)" }}>
-                <iframe
-                  title="Map"
-                  src="https://www.openstreetmap.org/export/embed.html?bbox=75.77%2C11.24%2C75.80%2C11.27&layer=mapnik&marker=11.2588%2C75.7804"
-                  style={{ width: "100%", height: "100%", border: 0, filter: "saturate(0.85) sepia(0.08)" }}
-                />
-                <div style={{ position: "absolute", left: 18, bottom: 18, background: "var(--surface-card)", borderRadius: "var(--radius-md)", padding: "0.9rem 1.1rem", boxShadow: "var(--shadow-md)", display: "flex", gap: "0.7rem", alignItems: "center" }}>
-                  <Icon name="map-pin" weight="fill" size={22} style={{ color: "var(--maroon-700)" }} />
-                  <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", fontWeight: 600 }}>Mananchira, Kozhikode</div>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
+      <Details />
+      <VisitAndMap />
       <Newsletter />
     </div>
   );

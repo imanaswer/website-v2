@@ -1,39 +1,47 @@
 import { useState, useEffect } from "react";
 import { Icon } from "./Icon";
 
-export function QuickActions({ onNavigate }) {
+export function QuickActions() {
   const [showTop, setShowTop] = useState(false);
   useEffect(() => {
     const onScroll = () => setShowTop((window.scrollY || 0) > 700);
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const round = {
+    width: 46, height: 46, borderRadius: "50%",
+    display: "flex", alignItems: "center", justifyContent: "center",
+    cursor: "pointer", transition: "transform var(--dur) var(--ease-out), background var(--dur), color var(--dur)",
+  };
+
   return (
-    <div style={{ position: "fixed", right: "clamp(14px,2vw,28px)", bottom: "clamp(16px,3vw,32px)", zIndex: 700, display: "flex", flexDirection: "column", gap: "0.7rem", alignItems: "flex-end" }}>
+    <div style={{ position: "fixed", right: "clamp(14px,2vw,28px)", bottom: "clamp(16px,3vw,32px)", zIndex: 700, display: "flex", flexDirection: "column", gap: "0.6rem", alignItems: "center" }}>
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         aria-label="Back to top"
+        onMouseEnter={(e) => { e.currentTarget.style.background = "var(--maroon-700)"; e.currentTarget.style.color = "var(--cream-50)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "var(--surface-card)"; e.currentTarget.style.color = "var(--maroon-800)"; }}
         style={{
-          width: 44, height: 44, borderRadius: "50%", border: "1px solid var(--border-strong)",
-          background: "var(--surface-card)", color: "var(--maroon-800)", cursor: "pointer",
-          display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "var(--shadow-md)",
+          ...round, border: "1px solid var(--border-strong)",
+          background: "var(--surface-card)", color: "var(--maroon-800)",
+          boxShadow: "var(--shadow-sm)",
           opacity: showTop ? 1 : 0,
           transform: showTop ? "translateY(0)" : "translateY(12px)",
           pointerEvents: showTop ? "auto" : "none",
-          transition: "opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out)",
         }}
       >
-        <Icon name="arrow-up" size={20} />
+        <Icon name="arrow-up" size={18} />
       </button>
-      <a href="https://wa.me/914952365215" target="_blank" rel="noopener noreferrer" title="WhatsApp"
-        style={{ width: 54, height: 54, borderRadius: "50%", background: "#25D366", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "var(--shadow-lg)" }}>
-        <Icon name="whatsapp-logo" weight="fill" size={28} />
+      <a
+        href="https://wa.me/914952365215" target="_blank" rel="noopener noreferrer" aria-label="Message us on WhatsApp"
+        onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
+        style={{ ...round, background: "var(--maroon-800)", color: "var(--cream-50)", border: "1px solid var(--maroon-800)", boxShadow: "var(--shadow-md)" }}
+      >
+        <Icon name="whatsapp-logo" weight="fill" size={24} />
       </a>
-      <button onClick={() => onNavigate("admissions")} title="Admission Enquiry"
-        style={{ border: "none", cursor: "pointer", padding: "0.7rem 1.1rem", borderRadius: "var(--radius-pill)", background: "var(--brand)", color: "var(--cream-50)", fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.85rem", boxShadow: "var(--shadow-brand)", display: "inline-flex", gap: "0.45rem", alignItems: "center" }}>
-        <Icon name="paper-plane-tilt" size={16} /> Enquire
-      </button>
     </div>
   );
 }

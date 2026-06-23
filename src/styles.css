@@ -89,13 +89,13 @@
   --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --text-hero:    clamp(2.75rem, 1.6rem + 5.2vw, 5rem);
-  --text-section: clamp(2rem, 1.3rem + 3vw, 3.25rem);
-  --text-lead:    clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
-  --text-xl:  1.25rem;
-  --text-lg:  1.125rem;
-  --text-base:1rem;
-  --text-sm:  0.875rem;
-  --text-xs:  0.75rem;
+  --text-section: clamp(2.1rem, 1.3rem + 3.2vw, 3.5rem);
+  --text-lead:    clamp(1.25rem, 1.05rem + 0.8vw, 1.6rem);
+  --text-xl:  1.375rem;
+  --text-lg:  1.1875rem;
+  --text-base:1.0625rem;
+  --text-sm:  0.9375rem;
+  --text-xs:  0.8125rem;
 
   /* Spacing */
   --space-1:  0.25rem;
@@ -244,3 +244,100 @@ button,input,select,textarea { font: inherit; color: inherit; }
 
 /* article img hover (news cards) */
 article img { transition: transform var(--dur-slow) var(--ease-out); }
+
+/* ============================================================
+   Editorial layer — type, hairlines, photo treatment
+   ============================================================ */
+body { font-optical-sizing: auto; }
+h1,h2,h3,h4,h5,h6 { font-optical-sizing: auto; }
+
+/* hairline rules */
+hr.rule, .rule { height: 1px; width: 100%; background: var(--border-subtle); border: 0; margin: 0; }
+.rule--strong  { background: var(--border-strong); }
+.rule--gold    { height: 2px; width: 44px; background: var(--gold-500); border: 0; }
+.rule--on-dark { background: var(--border-on-dark); }
+
+/* readable measure */
+.measure        { max-width: 66ch; }
+.measure-narrow { max-width: 52ch; }
+
+/* mono label (data / overline) */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.label--on-dark { color: var(--gold-300); }
+
+/* big editorial serif numeral */
+.numeral {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.86;
+  font-variant-numeric: lining-nums;
+}
+
+/* unified, art-directed photo treatment so hotlinked photos read as one set */
+.photo img { filter: saturate(0.9) contrast(1.03) brightness(0.99); }
+.photo-frame {
+  position: relative;
+  outline: 1px solid var(--border-subtle);
+  outline-offset: -1px;
+}
+.photo-frame::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(160deg, rgba(122,52,20,0.06), rgba(58,22,7,0.16));
+  mix-blend-mode: multiply;
+}
+
+/* editorial text link with sliding underline */
+.link-line {
+  position: relative; display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-sans); font-weight: 600; font-size: 1.02rem;
+  color: var(--text-brand); cursor: pointer; padding-bottom: 3px;
+  background: none; border: 0;
+}
+.link-line .ph { transition: transform var(--dur) var(--ease-out); }
+.link-line::after {
+  content: ""; position: absolute; left: 0; bottom: 0; height: 1.5px; width: 100%;
+  background: currentColor; transform: scaleX(1); transform-origin: right;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.link-line:hover::after { transform: scaleX(0); }
+.link-line:hover .ph { transform: translateX(4px); }
+.link-line--on-dark { color: var(--gold-300); }
+
+/* editorial index list */
+.index-row { border-top: 1px solid var(--border-subtle); }
+.index-list > .index-row:last-child { border-bottom: 1px solid var(--border-subtle); }
+
+/* drop-cap for the opening editorial paragraph */
+.dropcap::first-letter {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-size: 3.6em;
+  line-height: 0.72;
+  float: left;
+  padding: 0.06em 0.12em 0 0;
+  color: var(--maroon-700);
+}
+
+/* editorial responsive collapses */
+@media (max-width: 900px) {
+  .ed-split { grid-template-columns: 1fr !important; gap: var(--space-8) !important; }
+  .ed-aside { position: static !important; }
+  .ed-2col  { grid-template-columns: 1fr !important; }
+  .ed-facts { grid-template-columns: 1fr 1fr !important; }
+  .ed-index-row { grid-template-columns: auto 1fr !important; }
+  .ed-index-row .ed-index-desc { grid-column: 1 / -1; padding-left: 0 !important; margin-top: 0.5rem; }
+}
+@media (max-width: 560px) {
+  .ed-facts { grid-template-columns: 1fr !important; }
+  .ed-hero-facts { gap: 0.5rem 1rem !important; }
+}

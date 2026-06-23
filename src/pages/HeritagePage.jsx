@@ -1,54 +1,78 @@
 import { Img } from "../components/Img";
-import { Icon } from "../components/Icon";
 import { Reveal } from "../components/Reveal";
-import { Kicker } from "../components/Kicker";
-import { Button } from "../components/Button";
-import { Badge } from "../components/Badge";
 import { PageHero } from "../components/PageHero";
+import { TextLink, Label } from "../components/Ed";
 
 const IMG = {
   campus: "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/gujarati-school.jpg",
   a1:     "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/progrm.jpg",
 };
 
-function Story() {
+function Story({ onNavigate }) {
   return (
     <section className="section">
-      <div className="container container--wide about-grid" style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "var(--space-16)", alignItems: "center" }}>
-        <Reveal>
-          <Kicker>About the school</Kicker>
-          <h2 style={{ fontSize: "var(--text-section)", fontWeight: 500, margin: "1rem 0 1.2rem", maxWidth: "20ch" }}>Quality and learning, brought together since 1869</h2>
-          <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.05rem", lineHeight: 1.75, color: "var(--text-secondary)", marginBottom: "1rem" }}>
-            Sri Gujarati Vidyalaya was established in 1869 to impart quality education to the children of the Gujarati community. Managed by the Sri Gujarati Vidyalaya Association — a charitable welfare society registered under the Societies Act, 1860 — it remains a Kerala Government recognised, unaided English-medium co-educational school.
-          </p>
-          <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.05rem", lineHeight: 1.75, color: "var(--text-secondary)" }}>
-            Today it stands among the institutions that bring quality and learning together — with excellent faculty and facilities set in a serene, eco-friendly and sustainable campus near Mananchira.
-          </p>
-        </Reveal>
-        <Reveal delay={120}>
-          <Img src={IMG.campus} alt="Heritage campus" style={{ borderRadius: "var(--radius-xl)", aspectRatio: "4/5", boxShadow: "var(--shadow-lg)" }} />
-        </Reveal>
+      <div className="container container--wide">
+        <div className="ed-split" style={{ display: "grid", gridTemplateColumns: "3fr 8fr", gap: "var(--space-16)" }}>
+          <aside className="ed-aside" style={{ position: "sticky", top: 110, alignSelf: "start" }}>
+            <Reveal>
+              <Label>The Story</Label>
+              <div className="rule--gold" style={{ margin: "1.1rem 0" }} />
+              <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "1.2rem", lineHeight: 1.5, color: "var(--maroon-800)" }}>
+                Quality and learning, brought together since 1869.
+              </p>
+            </Reveal>
+          </aside>
+          <div>
+            <Reveal>
+              <p className="dropcap measure" style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.3rem,1.05rem + 1vw,1.75rem)", lineHeight: 1.5, color: "var(--text-primary)" }}>
+                Sri Gujarati Vidyalaya was established in 1869 to bring quality education to the
+                children of Kozhikode. It is managed by the Sri Gujarati Vidyalaya Association — a
+                charitable welfare society registered under the Societies Act, 1860.
+              </p>
+            </Reveal>
+            <Reveal delay={90}>
+              <p className="measure" style={{ fontFamily: "var(--font-sans)", fontSize: "1.18rem", lineHeight: 1.75, color: "var(--text-secondary)", marginTop: "1.8rem" }}>
+                Today it remains a Kerala Government-recognised, unaided, English-medium and
+                co-educational school — standing among the institutions that bring quality and
+                learning together, with dedicated faculty and facilities set in a serene,
+                eco-friendly campus near Mananchira.
+              </p>
+            </Reveal>
+            <Reveal delay={140}>
+              <div className="photo photo-frame" style={{ marginTop: "2.6rem" }}>
+                <Img src={IMG.campus} alt="The heritage campus of Sri Gujarati Vidyalaya" style={{ aspectRatio: "16/9" }} />
+              </div>
+            </Reveal>
+            <Reveal delay={180}>
+              <div style={{ marginTop: "2rem" }}>
+                <TextLink onClick={() => onNavigate("academics")}>Explore our academics</TextLink>
+              </div>
+            </Reveal>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-function VMP() {
-  const cards = [
-    { icon: "compass", t: "Vision",     d: "To provide quality leadership along with all-round development and academic growth — grooming students to face tomorrow with confidence, as leaders from a very young age." },
-    { icon: "target",  t: "Mission",    d: "To provide a disciplined, overall growing environment that encourages every child to bring out the best in oneself." },
-    { icon: "heart",   t: "Philosophy", d: "Every child is born with infinite potential. We follow a child-centred approach in an eco-friendly, serene environment, attending to each child as a unique individual." },
+function Values() {
+  const items = [
+    { k: "Vision",     d: "To provide quality leadership along with all-round development and academic growth — grooming students to face tomorrow with confidence, as leaders from a very young age." },
+    { k: "Mission",    d: "To provide a disciplined, nurturing environment that encourages every child to bring out the best in themselves." },
+    { k: "Philosophy", d: "Every child is born with infinite potential. We follow a child-centred approach in a serene, eco-friendly environment, attending to each child as a unique individual." },
   ];
   return (
     <section className="section" style={{ background: "var(--surface-raised)" }}>
       <div className="container container--wide">
-        <div className="cards-3" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "var(--space-6)" }}>
-          {cards.map((c, i) => (
-            <Reveal key={c.t} delay={i * 90} style={{ height: "100%" }}>
-              <div style={{ background: "var(--surface-card)", borderRadius: "var(--radius-lg)", padding: "2rem 1.8rem", height: "100%", boxShadow: "var(--shadow-sm)", borderTop: "3px solid var(--gold-500)" }}>
-                <Icon name={c.icon} size={32} style={{ color: "var(--maroon-700)", marginBottom: "1rem", display: "block" }} />
-                <h3 style={{ fontSize: "1.5rem", fontWeight: 500, marginBottom: "0.7rem" }}>{c.t}</h3>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.96rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{c.d}</p>
+        <Reveal style={{ marginBottom: "var(--space-10)" }}>
+          <Label>What we stand for</Label>
+        </Reveal>
+        <div className="index-list">
+          {items.map((it, i) => (
+            <Reveal key={it.k} delay={i * 80}>
+              <div className="index-row ed-index-row" style={{ display: "grid", gridTemplateColumns: "4fr 8fr", gap: "var(--space-12)", padding: "clamp(1.8rem,3vw,2.8rem) 0", alignItems: "baseline" }}>
+                <h3 style={{ fontSize: "clamp(1.6rem,1.2rem + 1.2vw,2.4rem)", fontWeight: 400 }}>{it.k}</h3>
+                <p className="ed-index-desc" style={{ fontFamily: "var(--font-sans)", fontSize: "1.2rem", lineHeight: 1.7, color: "var(--text-secondary)", maxWidth: "56ch" }}>{it.d}</p>
               </div>
             </Reveal>
           ))}
@@ -58,53 +82,75 @@ function VMP() {
   );
 }
 
-function VTimeline() {
+function Timeline() {
   const ms = [
-    { year: "1869",        t: "Founded",         d: "The Gujarati community establishes the school to educate its children in Kozhikode." },
-    { year: "1860s–1900s", t: "Roots take hold", d: "Registered under the Societies Act, 1860, the SGVA builds a lasting institution." },
-    { year: "Mid-1900s",   t: "Recognition",     d: "Becomes a Kerala Government recognised English-medium school." },
-    { year: "1990s",       t: "A serene campus", d: "Grows into its eco-friendly campus, balancing heritage with modern facilities." },
-    { year: "Today",       t: "Higher Secondary",d: "Science & Commerce streams, modern labs, swimming pools and a 150-year legacy." },
+    { year: "1869",        t: "The school is founded",   d: "The Gujarati community establishes the school to educate the children of Kozhikode." },
+    { year: "1860s–1900s", t: "Roots take hold",         d: "Registered under the Societies Act, 1860, the Association builds a lasting institution." },
+    { year: "Mid-1900s",   t: "Government recognition",  d: "Becomes a Kerala Government-recognised, English-medium school." },
+    { year: "1990s",       t: "A serene new campus",     d: "Grows into an eco-friendly campus near Mananchira, balancing heritage with modern facilities." },
+    { year: "Today",       t: "Higher Secondary",        d: "Science and Commerce streams, modern laboratories and a living legacy of over a century and a half." },
   ];
   return (
     <section className="section">
-      <div className="container container--narrow">
-        <Reveal style={{ textAlign: "center", marginBottom: "var(--space-12)" }}>
-          <Kicker>Our journey</Kicker>
-          <h2 style={{ fontSize: "var(--text-section)", fontWeight: 500, marginTop: "0.8rem" }}>A living timeline</h2>
-        </Reveal>
-        <div style={{ position: "relative", paddingLeft: "2.4rem" }}>
-          <div style={{ position: "absolute", left: 9, top: 6, bottom: 6, width: 2, background: "var(--sand-300)" }} />
-          {ms.map((m, i) => (
-            <Reveal key={m.year} delay={i * 60} style={{ position: "relative", paddingBottom: i === ms.length - 1 ? 0 : "2.2rem" }}>
-              <span style={{ position: "absolute", left: "-2.4rem", top: 4, width: 20, height: 20, borderRadius: "50%", background: "var(--maroon-700)", border: "3px solid var(--surface-page)", boxShadow: "0 0 0 2px var(--maroon-200)" }} />
-              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "0.95rem", color: "var(--gold-700)", letterSpacing: "0.04em" }}>{m.year}</span>
-              <h3 style={{ fontSize: "1.3rem", fontWeight: 500, margin: "0.3rem 0 0.4rem" }}>{m.t}</h3>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.96rem", lineHeight: 1.65, color: "var(--text-secondary)" }}>{m.d}</p>
+      <div className="container container--wide">
+        <div className="ed-split" style={{ display: "grid", gridTemplateColumns: "3fr 9fr", gap: "var(--space-16)" }}>
+          <aside className="ed-aside" style={{ position: "sticky", top: 110, alignSelf: "start" }}>
+            <Reveal>
+              <Label>Our Journey</Label>
+              <h2 style={{ fontSize: "var(--text-section)", fontWeight: 400, marginTop: "1rem", maxWidth: "10ch" }}>A living timeline</h2>
             </Reveal>
-          ))}
+          </aside>
+          <div className="index-list">
+            {ms.map((m, i) => (
+              <Reveal key={m.year} delay={i * 60}>
+                <div className="index-row ed-index-row" style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "var(--space-10)", padding: "clamp(1.5rem,2.5vw,2.2rem) 0", alignItems: "baseline" }}>
+                  <span className="numeral" style={{ fontSize: "clamp(1.6rem,1.2rem + 1vw,2.2rem)", color: "var(--gold-600)", minWidth: "5.5ch" }}>{m.year}</span>
+                  <div>
+                    <h3 style={{ fontSize: "clamp(1.3rem,1.1rem + 0.6vw,1.7rem)", fontWeight: 400, marginBottom: "0.5rem" }}>{m.t}</h3>
+                    <p className="ed-index-desc" style={{ fontFamily: "var(--font-sans)", fontSize: "1.1rem", lineHeight: 1.7, color: "var(--text-secondary)", maxWidth: "52ch" }}>{m.d}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function Affiliation() {
+function Recognition() {
+  const facts = [
+    { k: "Established",  v: "1869" },
+    { k: "Management",   v: "Sri Gujarati Vidyalaya Association" },
+    { k: "Recognition",  v: "Kerala Government" },
+    { k: "Type",         v: "Unaided · English-medium · Co-educational" },
+    { k: "Registration", v: "Societies Act, 1860" },
+  ];
   return (
-    <section className="section" style={{ background: "var(--maroon-950)", color: "var(--cream-50)" }}>
-      <div className="container container--wide" style={{ display: "flex", gap: "var(--space-12)", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
-        <Reveal style={{ maxWidth: "40ch" }}>
-          <Kicker tone="inverse">Recognition &amp; affiliation</Kicker>
-          <h2 style={{ color: "var(--cream-50)", fontWeight: 500, fontSize: "var(--text-section)", margin: "0.9rem 0 1rem" }}>Recognised, trusted, accountable</h2>
-          <p style={{ fontFamily: "var(--font-sans)", color: "var(--maroon-100)", fontSize: "1.02rem", lineHeight: 1.7 }}>
-            A Kerala Government recognised institution managed by a registered charitable society — combining the assurance of heritage governance with modern educational standards.
-          </p>
-        </Reveal>
-        <Reveal delay={120} style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap" }}>
-          {["Kerala Govt. Recognised","English Medium","Co-Educational","Higher Secondary","Est. 1869"].map((b) => (
-            <Badge key={b} tone="gold" style={{ background: "rgba(248,240,220,.14)", color: "var(--gold-300)", fontSize: "0.82rem", padding: "0.5rem 0.9rem" }}>{b}</Badge>
-          ))}
-        </Reveal>
+    <section style={{ background: "var(--maroon-950)", color: "var(--cream-50)", position: "relative", overflow: "hidden" }}>
+      <img src="/assets/crest-cream.png" alt="" aria-hidden style={{ position: "absolute", left: "-4%", top: "50%", transform: "translateY(-50%)", height: "150%", opacity: 0.05 }} />
+      <div className="container container--wide" style={{ position: "relative", paddingBlock: "var(--section-y)" }}>
+        <div className="ed-split" style={{ display: "grid", gridTemplateColumns: "5fr 7fr", gap: "var(--space-16)", alignItems: "center" }}>
+          <Reveal>
+            <div>
+              <Label onDark>Recognition &amp; Governance</Label>
+              <h2 style={{ color: "var(--cream-50)", fontWeight: 400, fontSize: "var(--text-section)", margin: "1.2rem 0 0", maxWidth: "14ch" }}>
+                Recognised, trusted, accountable
+              </h2>
+            </div>
+          </Reveal>
+          <Reveal delay={120}>
+            <dl className="index-list" style={{ margin: 0 }}>
+              {facts.map((f) => (
+                <div key={f.k} className="index-row" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "1.5rem", padding: "1.2rem 0", borderColor: "var(--border-on-dark)" }}>
+                  <dt className="label label--on-dark" style={{ color: "var(--maroon-200)" }}>{f.k}</dt>
+                  <dd style={{ margin: 0, fontFamily: "var(--font-serif)", fontSize: "1.25rem", color: "var(--cream-50)", lineHeight: 1.3 }}>{f.v}</dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
@@ -115,12 +161,12 @@ export function HeritagePage({ onNavigate }) {
     <div>
       <PageHero onNavigate={onNavigate} crumb="Heritage" eyebrow="Since 1869"
         title="A prestigious heritage, a modern education"
-        lead="For over 150 years, Sri Gujarati Vidyalaya has shaped generations of learners in Kozhikode — rooted in humility, reaching for excellence."
+        lead="For over a century and a half, Sri Gujarati Vidyalaya has shaped generations of learners in Kozhikode — rooted in humility, reaching for excellence."
         image={IMG.a1} />
-      <Story />
-      <VMP />
-      <VTimeline />
-      <Affiliation />
+      <Story onNavigate={onNavigate} />
+      <Values />
+      <Timeline />
+      <Recognition />
     </div>
   );
 }

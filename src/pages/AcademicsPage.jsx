@@ -1,41 +1,70 @@
 import { Img } from "../components/Img";
 import { Icon } from "../components/Icon";
 import { Reveal } from "../components/Reveal";
-import { Kicker } from "../components/Kicker";
-import { Badge } from "../components/Badge";
-import { Stat } from "../components/Stat";
-import { Avatar } from "../components/Avatar";
 import { PageHero } from "../components/PageHero";
+import { TextLink, Label } from "../components/Ed";
 
 const IMG = {
   principal: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/05/vimala-jayaraj.jpg",
   program:   "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/progrm.jpg",
 };
 
+function Approach() {
+  return (
+    <section className="section">
+      <div className="container container--wide">
+        <div className="ed-split" style={{ display: "grid", gridTemplateColumns: "3fr 8fr", gap: "var(--space-16)" }}>
+          <aside className="ed-aside" style={{ position: "sticky", top: 110, alignSelf: "start" }}>
+            <Reveal>
+              <Label>Our Approach</Label>
+              <div className="rule--gold" style={{ margin: "1.1rem 0" }} />
+            </Reveal>
+          </aside>
+          <div>
+            <Reveal>
+              <p className="dropcap measure" style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.3rem,1.05rem + 1vw,1.75rem)", lineHeight: 1.5, color: "var(--text-primary)" }}>
+                Learning here is a continuous journey, from play-based early years to Higher
+                Secondary. At every stage, rigour is held in balance with sport, the arts and a
+                genuine culture of service — so that children grow confident, curious and grounded.
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Streams() {
   const streams = [
-    { icon: "atom",          t: "Higher Secondary — Science",   d: "Physics, Chemistry, Biology & Mathematics for aspiring doctors, engineers and researchers.", tags: ["Physics","Chemistry","Biology","Maths"] },
-    { icon: "chart-line-up", t: "Higher Secondary — Commerce",  d: "Accountancy, Business Studies & Economics for future leaders in business and finance.",      tags: ["Accountancy","Business","Economics"] },
+    { n: "Science",  d: "For aspiring doctors, engineers and researchers — a foundation in the sciences and mathematics.", subjects: ["Physics", "Chemistry", "Biology", "Mathematics"] },
+    { n: "Commerce", d: "For future leaders in business, finance and enterprise — the language of commerce and the economy.", subjects: ["Accountancy", "Business Studies", "Economics"] },
   ];
   return (
-    <section className="section">
+    <section className="section" style={{ background: "var(--surface-raised)" }}>
       <div className="container container--wide">
         <Reveal style={{ marginBottom: "var(--space-12)" }}>
-          <Kicker>Higher Secondary streams</Kicker>
-          <h2 style={{ fontSize: "var(--text-section)", fontWeight: 500, marginTop: "0.8rem", maxWidth: "18ch" }}>Choose the path that fits the future</h2>
+          <Label>Higher Secondary</Label>
+          <h2 style={{ fontSize: "var(--text-section)", fontWeight: 400, marginTop: "1rem", maxWidth: "18ch" }}>
+            Choose the path that fits the future
+          </h2>
         </Reveal>
-        <div className="cards-2" style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "var(--space-6)" }}>
+        <div className="index-list">
           {streams.map((s, i) => (
-            <Reveal key={s.t} delay={i * 100} style={{ height: "100%" }}>
-              <div style={{ background: "var(--surface-card)", borderRadius: "var(--radius-xl)", padding: "2.2rem", height: "100%", boxShadow: "var(--shadow-md)", border: "1px solid var(--border-subtle)" }}>
-                <div style={{ width: 56, height: 56, borderRadius: "var(--radius-md)", background: "var(--maroon-700)", color: "var(--cream-50)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.3rem" }}>
-                  <Icon name={s.icon} size={30} />
+            <Reveal key={s.n} delay={i * 90}>
+              <div className="index-row ed-2col" style={{ display: "grid", gridTemplateColumns: "5fr 7fr", gap: "var(--space-12)", padding: "clamp(2rem,3.5vw,3.2rem) 0", alignItems: "start" }}>
+                <div>
+                  <h3 style={{ fontSize: "clamp(1.9rem,1.4rem + 1.6vw,2.8rem)", fontWeight: 400 }}>{s.n}</h3>
+                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.15rem", lineHeight: 1.7, color: "var(--text-secondary)", marginTop: "1rem", maxWidth: "40ch" }}>{s.d}</p>
                 </div>
-                <h3 style={{ fontSize: "1.5rem", fontWeight: 500, marginBottom: "0.7rem" }}>{s.t}</h3>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "1rem", lineHeight: 1.7, color: "var(--text-secondary)", marginBottom: "1.4rem" }}>{s.d}</p>
-                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                  {s.tags.map((t) => <Badge key={t} tone="neutral">{t}</Badge>)}
-                </div>
+                <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                  {s.subjects.map((sub, j) => (
+                    <li key={sub} style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", padding: "0.85rem 0", borderTop: j === 0 ? "none" : "1px solid var(--border-subtle)" }}>
+                      <span className="label" style={{ color: "var(--gold-700)", minWidth: "2.5ch" }}>{String(j + 1).padStart(2, "0")}</span>
+                      <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", color: "var(--text-primary)" }}>{sub}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </Reveal>
           ))}
@@ -45,58 +74,61 @@ function Streams() {
   );
 }
 
-function Achievements() {
-  const stats = [
-    { value: 98, suffix: "%", label: "Higher Secondary Pass" },
-    { value: 45, suffix: "+", label: "A+ Scorers / Year" },
-    { value: 30, suffix: "+", label: "Clubs & Activities" },
-    { value: 15, suffix: "+", label: "Sports Disciplines" },
-  ];
-  return (
-    <section style={{ background: "var(--maroon-900)", position: "relative", overflow: "hidden" }}>
-      <img src="/assets/crest-cream.png" alt="" style={{ position: "absolute", left: "-50px", top: "50%", transform: "translateY(-50%)", height: "150%", opacity: 0.05 }} />
-      <div className="container container--wide" style={{ paddingBlock: "var(--space-16)", position: "relative" }}>
-        <Reveal style={{ textAlign: "center", marginBottom: "var(--space-12)" }}>
-          <Kicker tone="inverse">Achievement dashboard</Kicker>
-          <h2 style={{ color: "var(--cream-50)", fontWeight: 500, fontSize: "var(--text-section)", marginTop: "0.8rem" }}>Results that speak quietly</h2>
-        </Reveal>
-        <div className="glance-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "var(--space-8)" }}>
-          {stats.map((s, i) => <Reveal key={s.label} delay={i * 90}><Stat {...s} tone="inverse" /></Reveal>)}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Faculty() {
-  const people = [
-    { n: "Vimala Jayaraj",  r: "Principal",              img: IMG.principal },
-    { n: "Suresh Kumar",    r: "Vice Principal" },
-    { n: "Lakshmi Menon",   r: "HoD — Science" },
-    { n: "Anil Raghavan",   r: "HoD — Commerce" },
-    { n: "Fathima Beevi",   r: "Senior Faculty, English" },
-    { n: "Deepa Nair",      r: "Primary Coordinator" },
+function Beyond() {
+  const items = [
+    { icon: "soccer-ball",      t: "Sport",   d: "Indoor and outdoor courts, swimming pools and a full calendar of disciplines." },
+    { icon: "palette",          t: "The Arts", d: "Music, dance, drama and the visual arts, woven through school life." },
+    { icon: "hand-heart",       t: "Service", d: "A culture of responsibility, citizenship and care for the community and environment." },
   ];
   return (
     <section className="section">
       <div className="container container--wide">
-        <Reveal style={{ marginBottom: "var(--space-12)" }}>
-          <Kicker>Faculty directory</Kicker>
-          <h2 style={{ fontSize: "var(--text-section)", fontWeight: 500, marginTop: "0.8rem" }}>Teachers who know every child</h2>
+        <Reveal style={{ marginBottom: "var(--space-10)" }}>
+          <Label>Beyond the Classroom</Label>
+          <h2 style={{ fontSize: "var(--text-section)", fontWeight: 400, marginTop: "1rem", maxWidth: "20ch" }}>
+            An education that reaches past the timetable
+          </h2>
         </Reveal>
-        <div className="cards-6" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "var(--space-6)" }}>
-          {people.map((p, i) => (
-            <Reveal key={p.n} delay={(i % 3) * 80}>
-              <div style={{ display: "flex", gap: "1rem", alignItems: "center", background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", padding: "1.1rem 1.3rem", boxShadow: "var(--shadow-sm)" }}>
-                <Avatar name={p.n} src={p.img} size="lg" />
-                <div>
-                  <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "1.1rem" }}>{p.n}</div>
-                  <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: "var(--text-muted)" }}>{p.r}</div>
-                </div>
+        <div className="index-list">
+          {items.map((it, i) => (
+            <Reveal key={it.t} delay={i * 70}>
+              <div className="index-row ed-index-row" style={{ display: "grid", gridTemplateColumns: "auto 4fr 6fr", gap: "1.5rem", padding: "clamp(1.6rem,2.5vw,2.2rem) 0", alignItems: "baseline" }}>
+                <Icon name={it.icon} size={26} style={{ color: "var(--gold-600)" }} />
+                <h3 style={{ fontSize: "clamp(1.4rem,1.1rem + 0.9vw,1.9rem)", fontWeight: 400 }}>{it.t}</h3>
+                <p className="ed-index-desc" style={{ fontFamily: "var(--font-sans)", fontSize: "1.15rem", lineHeight: 1.7, color: "var(--text-secondary)", maxWidth: "44ch" }}>{it.d}</p>
               </div>
             </Reveal>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+function FacultyNote({ onNavigate }) {
+  return (
+    <section className="section" style={{ background: "var(--surface-raised)" }}>
+      <div className="container container--narrow">
+        <Reveal>
+          <div className="ed-2col" style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "var(--space-12)", alignItems: "center" }}>
+            <div style={{ width: "clamp(130px,18vw,190px)" }}>
+              <div className="photo photo-frame">
+                <Img src={IMG.principal} alt="Vimala Jayaraj, Principal" style={{ aspectRatio: "4/5" }} />
+              </div>
+            </div>
+            <div>
+              <Label>Our Teachers</Label>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.35rem,1.05rem + 1.3vw,1.95rem)", lineHeight: 1.5, fontWeight: 400, color: "var(--text-primary)", marginTop: "1.2rem" }}>
+                Led by our Principal, Vimala Jayaraj, ours is a faculty that knows every child as an
+                individual — and teaches with the patience and care that a 150-year-old institution
+                expects.
+              </p>
+              <div style={{ marginTop: "2rem" }}>
+                <TextLink onClick={() => onNavigate("admissions")}>Enquire about admissions</TextLink>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -109,9 +141,10 @@ export function AcademicsPage({ onNavigate }) {
         title="Rigour, balance and joy in learning"
         lead="From play-based early years to Higher Secondary streams, our academics develop confident, curious and grounded young people."
         image={IMG.program} />
+      <Approach />
       <Streams />
-      <Achievements />
-      <Faculty />
+      <Beyond />
+      <FacultyNote onNavigate={onNavigate} />
     </div>
   );
 }

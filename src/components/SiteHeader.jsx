@@ -34,7 +34,7 @@ export function SiteHeader({ current, onNavigate }) {
     <header style={{ position: "sticky", top: 0, zIndex: 200 }}>
       {/* Utility bar */}
       <div style={{ background: "var(--maroon-900)", color: "var(--cream-100)" }}>
-        <div className="container container--wide" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 38, fontFamily: "var(--font-sans)", fontSize: "0.78rem" }}>
+        <div className="container container--wide" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 40, fontFamily: "var(--font-sans)", fontSize: "0.86rem" }}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "var(--gold-300)", fontStyle: "italic", fontFamily: "var(--font-serif)" }}>
             विद्या विनयेन शोभते
           </span>
@@ -66,7 +66,7 @@ export function SiteHeader({ current, onNavigate }) {
           <nav className="desk-nav" style={{ display: "flex", alignItems: "center", gap: "0.2rem" }}>
             {NAV.map((n) => (
               <a key={n.id} onClick={() => nav(n.id)}
-                style={{ position: "relative", cursor: "pointer", padding: "0.5rem 0.9rem", fontFamily: "var(--font-sans)", fontSize: "0.9rem", fontWeight: 600, color: current === n.id ? "var(--maroon-800)" : "var(--ink-700)" }}
+                style={{ position: "relative", cursor: "pointer", padding: "0.5rem 0.95rem", fontFamily: "var(--font-sans)", fontSize: "1rem", fontWeight: 600, color: current === n.id ? "var(--maroon-800)" : "var(--ink-700)" }}
                 onMouseEnter={(e) => { if (current !== n.id) e.currentTarget.style.color = "var(--maroon-700)"; }}
                 onMouseLeave={(e) => { if (current !== n.id) e.currentTarget.style.color = "var(--ink-700)"; }}
               >
@@ -82,7 +82,7 @@ export function SiteHeader({ current, onNavigate }) {
           </nav>
 
           <div className="desk-nav" style={{ display: "flex" }}>
-            <Button size="sm" onClick={() => nav("admissions")}>Apply Now</Button>
+            <Button size="md" onClick={() => nav("admissions")}>Apply Now</Button>
           </div>
 
           <button className="burger" onClick={() => setOpen((o) => !o)} aria-label="Menu"

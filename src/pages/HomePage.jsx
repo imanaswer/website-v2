@@ -1,17 +1,12 @@
-import { useState, useEffect } from "react";
 import { Img } from "../components/Img";
 import { Icon } from "../components/Icon";
 import { Reveal } from "../components/Reveal";
-import { Kicker } from "../components/Kicker";
 import { Button } from "../components/Button";
-import { Badge } from "../components/Badge";
-import { Stat } from "../components/Stat";
-import { Avatar } from "../components/Avatar";
 
 const IMG = {
   campus:    "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/gujarati-school.jpg",
-  a1:        "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/progrm.jpg",
-  a2:        "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13-555x472.jpg",
+  students:  "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/progrm.jpg",
+  life:      "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13-555x472.jpg",
   faculty:   "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/Faculty_.jpg",
   principal: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/05/vimala-jayaraj.jpg",
   news_plusone: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2024/06/plusone-555x555.jpeg",
@@ -20,167 +15,198 @@ const IMG = {
   news_ocean:"https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/3-18-555x472.jpg",
 };
 
-/* ─── Hero ─── */
-function Hero({ onNavigate }) {
+/* A small inline text link that animates its arrow + underline. */
+function TextLink({ children, onClick, onDark }) {
   return (
-    <section style={{ position: "relative", minHeight: "min(92vh,820px)", display: "flex", alignItems: "flex-end", overflow: "hidden" }}>
-      <div className="hero-bg" style={{ position: "absolute", inset: 0 }}>
-        <Img src={IMG.campus} alt="Sri Gujarati Vidyalaya campus" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
+    <button className={"link-line" + (onDark ? " link-line--on-dark" : "")} onClick={onClick}>
+      {children}<Icon name="arrow-right" size={15} />
+    </button>
+  );
+}
+
+/* ─────────────────────────  Hero  ───────────────────────── */
+function Hero({ onNavigate }) {
+  const facts = ["Est. 1869", "English Medium", "Co-educational", "Govt. Recognised"];
+  return (
+    <section style={{ position: "relative", minHeight: "min(94vh,880px)", display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden", background: "var(--maroon-950)" }}>
+      <div className="hero-bg photo" style={{ position: "absolute", inset: 0 }}>
+        <Img src={IMG.campus} alt="The Sri Gujarati Vidyalaya campus at Mananchira, Kozhikode" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
       </div>
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(58,22,7,.58) 0%,rgba(58,22,7,.18) 32%,rgba(58,22,7,.86) 100%)" }} />
-      <div className="container container--wide" style={{ position: "relative", paddingBottom: "var(--space-12)", paddingTop: "var(--space-16)", width: "100%" }}>
+      {/* refined, restrained gradient — readable but not muddy */}
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(36,16,6,.42) 0%,rgba(36,16,6,.08) 38%,rgba(36,16,6,.55) 78%,rgba(26,11,4,.86) 100%)" }} />
+
+      <div className="container container--wide" style={{ position: "relative", width: "100%", paddingTop: "var(--space-20)", paddingBottom: "var(--space-10)" }}>
         <Reveal>
-          <Badge tone="gold" dot style={{ marginBottom: "1.4rem", background: "rgba(248,240,220,.16)", color: "var(--gold-300)", backdropFilter: "blur(6px)" }}>Established 1869 · Kozhikode</Badge>
+          <div className="label label--on-dark" style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+            <span style={{ width: 28, height: 1.5, background: "var(--gold-400)", display: "inline-block" }} />
+            Established 1869 · Mananchira, Kozhikode
+          </div>
         </Reveal>
-        <Reveal delay={80}>
-          <h1 style={{ color: "var(--cream-50)", fontWeight: 500, fontSize: "var(--text-hero)", lineHeight: 1.02, maxWidth: "16ch", letterSpacing: "-0.02em" }}>
-            A heritage of learning, <span style={{ fontStyle: "italic", color: "var(--gold-300)", fontWeight: 400 }}>for every child.</span>
+        <Reveal delay={90}>
+          <h1 style={{ color: "var(--cream-50)", fontWeight: 400, fontSize: "clamp(2.9rem,1.4rem + 6vw,6rem)", lineHeight: 1.0, maxWidth: "15ch", letterSpacing: "-0.025em", marginTop: "1.4rem" }}>
+            Knowledge, adorned&nbsp;by{" "}
+            <span style={{ fontStyle: "italic", fontWeight: 300, color: "var(--gold-300)" }}>humility.</span>
           </h1>
         </Reveal>
-        <Reveal delay={160}>
-          <p style={{ color: "var(--cream-100)", fontFamily: "var(--font-sans)", fontSize: "var(--text-lead)", maxWidth: "46ch", marginTop: "1.4rem", lineHeight: 1.6, opacity: 0.95 }}>
-            For over 150 years, Sri Gujarati Vidyalaya has nurtured the total development of the child — where wisdom, humility and joy grow together.
+        <Reveal delay={170}>
+          <p className="measure-narrow" style={{ color: "var(--cream-100)", fontFamily: "var(--font-serif)", fontSize: "var(--text-lead)", marginTop: "1.6rem", lineHeight: 1.6, opacity: 0.94 }}>
+            For over a hundred and fifty years, Sri Gujarati Vidyalaya has educated the children of
+            Kozhikode — a Kerala Government-recognised, English-medium school devoted to the total
+            development of every child.
           </p>
         </Reveal>
-        <Reveal delay={240}>
-          <div style={{ display: "flex", gap: "0.85rem", marginTop: "2.2rem", flexWrap: "wrap" }}>
-            <Button size="lg" onClick={() => onNavigate("admissions")} iconRight={<Icon name="arrow-right" size={18} />}>Apply for Admission</Button>
-            <Button size="lg" variant="inverse" onClick={() => onNavigate("gallery")} iconLeft={<Icon name="play-circle" weight="fill" size={20} />}>Take a Campus Tour</Button>
+        <Reveal delay={250}>
+          <div style={{ display: "flex", gap: "1.4rem", marginTop: "2.4rem", flexWrap: "wrap", alignItems: "center" }}>
+            <Button size="lg" onClick={() => onNavigate("admissions")} iconRight={<Icon name="arrow-right" size={18} />}>
+              Admissions 2026–27
+            </Button>
+            <TextLink onDark onClick={() => onNavigate("about")}>Discover our heritage</TextLink>
           </div>
         </Reveal>
-        <Reveal delay={340}>
-          <div className="hero-strip" style={{ marginTop: "var(--space-12)", display: "grid", gridTemplateColumns: "repeat(3,max-content)", gap: "clamp(1.5rem,4vw,3.5rem)", padding: "1.3rem 1.7rem", borderRadius: "var(--radius-lg)", background: "rgba(36,26,17,.34)", backdropFilter: "blur(14px) saturate(150%)", border: "1px solid rgba(248,240,220,.18)", width: "max-content", maxWidth: "100%" }}>
-            {[{ v: "156+", l: "Years of Legacy" }, { v: "2,400+", l: "Students" }, { v: "98%", l: "Board Results" }].map((s) => (
-              <div key={s.l}>
-                <div style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: "clamp(1.6rem,1.2rem + 1vw,2.1rem)", lineHeight: 1, color: "var(--gold-300)" }}>{s.v}</div>
-                <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.78rem", letterSpacing: "0.04em", color: "var(--cream-100)", marginTop: "0.35rem" }}>{s.l}</div>
-              </div>
+      </div>
+
+      {/* hairline fact band — replaces the gamified stat counters */}
+      <Reveal delay={320} style={{ position: "relative", width: "100%" }}>
+        <div style={{ borderTop: "1px solid var(--border-on-dark)" }}>
+          <div className="container container--wide ed-hero-facts" style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem 2.6rem", padding: "1.15rem 0", alignItems: "center" }}>
+            {facts.map((f, i) => (
+              <span key={f} style={{ display: "inline-flex", alignItems: "center", gap: "2.6rem" }}>
+                <span className="label label--on-dark" style={{ color: "var(--cream-100)", letterSpacing: "0.12em" }}>{f}</span>
+                {i < facts.length - 1 && <span aria-hidden style={{ width: 1, height: 12, background: "var(--border-on-dark)" }} />}
+              </span>
             ))}
+            <span style={{ marginLeft: "auto", fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "0.95rem", color: "var(--gold-300)" }}>
+              विद्या विनयेन शोभते
+            </span>
           </div>
-        </Reveal>
-      </div>
-      <div style={{ position: "absolute", bottom: "1.4rem", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.4rem", color: "var(--cream-100)", pointerEvents: "none" }}>
-        <span style={{ fontFamily: "var(--font-sans)", fontSize: "0.66rem", letterSpacing: "0.18em", textTransform: "uppercase", opacity: 0.7 }}>Scroll</span>
-        <Icon name="caret-down" size={18} className="scroll-cue" />
-      </div>
+        </div>
+      </Reveal>
     </section>
   );
 }
 
-/* ─── Trust bar ─── */
-function TrustBar() {
-  const items = [
-    { icon: "seal-check",    label: "Kerala Govt. Recognised" },
-    { icon: "translate",     label: "English Medium" },
-    { icon: "users-three",   label: "Co-Educational" },
-    { icon: "tree",          label: "Eco-Friendly Campus" },
-  ];
-  return (
-    <div style={{ background: "var(--surface-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-      <div className="container container--wide trust-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "1rem", padding: "1.6rem 0" }}>
-        {items.map((it) => (
-          <div key={it.label} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.7rem", color: "var(--maroon-700)" }}>
-            <Icon name={it.icon} size={26} />
-            <span style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.92rem", color: "var(--ink-800)" }}>{it.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ─── About ─── */
-function About({ onNavigate }) {
+/* ───────────────────  The School (letter / intro)  ─────────────────── */
+function Intro({ onNavigate }) {
   return (
     <section className="section">
-      <div className="container container--wide about-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-16)", alignItems: "center" }}>
-        <Reveal>
-          <Kicker>Welcome to Gujarati Vidyalaya</Kicker>
-          <h2 style={{ fontSize: "var(--text-section)", fontWeight: 500, margin: "1rem 0 1.2rem", maxWidth: "18ch" }}>
-            Education that develops the <em style={{ color: "var(--maroon-700)" }}>whole</em> child
-          </h2>
-          <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.05rem", lineHeight: 1.7, color: "var(--text-secondary)", marginBottom: "1rem" }}>
-            Sri Gujarati Vidyalaya Higher Secondary School aims at the total development of the child through education — where the child acquires the wisdom of humility and radiates happiness and contentment around.
-          </p>
-          <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.05rem", lineHeight: 1.7, color: "var(--text-secondary)", marginBottom: "1.8rem" }}>
-            A Kerala Government recognised unaided English-medium co-educational school, managed by the Sri Gujarati Vidyalaya Association — a charitable welfare society established to bring quality and learning together.
-          </p>
-          <Button variant="secondary" onClick={() => onNavigate("about")} iconRight={<Icon name="arrow-right" size={16} />}>Our story since 1869</Button>
-        </Reveal>
-        <Reveal delay={120}>
-          <div style={{ position: "relative" }}>
-            <Img src={IMG.a1} alt="Students at Gujarati Vidyalaya" style={{ borderRadius: "var(--radius-xl)", aspectRatio: "4/5", boxShadow: "var(--shadow-lg)" }} />
-            <Img src={IMG.a2} alt="Campus life" style={{ position: "absolute", width: "52%", aspectRatio: "1", right: "-6%", bottom: "-10%", borderRadius: "var(--radius-lg)", border: "6px solid var(--surface-page)", boxShadow: "var(--shadow-lg)" }} />
-            <div style={{ position: "absolute", top: "-22px", left: "-22px", background: "var(--maroon-900)", color: "var(--cream-50)", borderRadius: "var(--radius-lg)", padding: "1rem 1.2rem", boxShadow: "var(--shadow-brand)", display: "flex", alignItems: "center", gap: "0.8rem" }}>
-              <img src="/assets/crest-cream.png" alt="" style={{ height: 44 }} />
-              <div>
-                <div style={{ fontFamily: "var(--font-display)", fontSize: "1.6rem", lineHeight: 1, color: "var(--gold-300)" }}>156</div>
-                <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>Years</div>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
+      <div className="container container--wide">
+        <div className="ed-split" style={{ display: "grid", gridTemplateColumns: "3fr 8fr", gap: "var(--space-16)" }}>
+          <aside className="ed-aside" style={{ position: "sticky", top: 110, alignSelf: "start" }}>
+            <Reveal>
+              <div className="label">The School</div>
+              <div className="rule--gold" style={{ margin: "1.1rem 0 1.4rem" }} />
+              <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "1.3rem", lineHeight: 1.5, color: "var(--maroon-800)" }}>
+                विद्या विनयेन शोभते
+              </p>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.98rem", color: "var(--text-muted)", marginTop: "0.5rem", lineHeight: 1.5 }}>
+                “Knowledge is adorned by humility.”
+              </p>
+            </Reveal>
+          </aside>
 
-/* ─── At a Glance ─── */
-function Glance() {
-  const stats = [
-    { value: 156, suffix: "+", label: "Years of Legacy" },
-    { value: 2400, suffix: "+", label: "Students" },
-    { value: 120, suffix: "+", label: "Faculty Members" },
-    { value: 98, suffix: "%", label: "Board Results" },
-  ];
-  return (
-    <section style={{ background: "var(--maroon-900)", position: "relative", overflow: "hidden" }}>
-      <img src="/assets/crest-cream.png" alt="" style={{ position: "absolute", right: "-60px", top: "50%", transform: "translateY(-50%)", height: "150%", opacity: 0.05 }} />
-      <div className="container container--wide" style={{ paddingBlock: "var(--space-16)", position: "relative" }}>
-        <Reveal style={{ textAlign: "center", marginBottom: "var(--space-12)" }}>
-          <Kicker tone="inverse">School at a glance</Kicker>
-          <h2 style={{ color: "var(--cream-50)", fontWeight: 500, fontSize: "var(--text-section)", marginTop: "0.8rem" }}>A legacy you can measure</h2>
-        </Reveal>
-        <div className="glance-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "var(--space-8)" }}>
-          {stats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 90}><Stat {...s} tone="inverse" /></Reveal>
-          ))}
+          <div>
+            <Reveal>
+              <p className="dropcap measure" style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.35rem,1.05rem + 1.1vw,1.85rem)", lineHeight: 1.5, color: "var(--text-primary)", fontWeight: 400 }}>
+                The school aims at the total development of the child through education — where the
+                child acquires the wisdom of humility, and radiates happiness and contentment around.
+              </p>
+            </Reveal>
+            <Reveal delay={90}>
+              <p className="measure" style={{ fontFamily: "var(--font-sans)", fontSize: "1.2rem", lineHeight: 1.75, color: "var(--text-secondary)", marginTop: "1.8rem" }}>
+                Founded in 1869 and managed by the Sri Gujarati Vidyalaya Association, ours is a
+                Kerala Government-recognised, unaided, English-medium and co-educational school. For
+                generation after generation of Kozhikode families, it has been a place where rigour
+                and warmth sit side by side.
+              </p>
+            </Reveal>
+            <Reveal delay={150}>
+              <div style={{ marginTop: "2.2rem" }}>
+                <TextLink onClick={() => onNavigate("about")}>Our story since 1869</TextLink>
+              </div>
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── Academics ─── */
-function Academics({ onNavigate }) {
+/* ─────────────────  Heritage band (full-bleed, restrained)  ───────────────── */
+function HeritageBand() {
+  const facts = [
+    { k: "Founded",     v: "1869" },
+    { k: "Location",    v: "Mananchira, Kozhikode" },
+    { k: "Recognition", v: "Kerala Government" },
+    { k: "Medium",      v: "English · Co-educational" },
+  ];
+  return (
+    <section style={{ background: "var(--maroon-950)", color: "var(--cream-50)", position: "relative", overflow: "hidden" }}>
+      <img src="/assets/crest-cream.png" alt="" aria-hidden style={{ position: "absolute", right: "-4%", top: "50%", transform: "translateY(-50%)", height: "150%", opacity: 0.05 }} />
+      <div className="container container--wide" style={{ position: "relative", paddingBlock: "var(--section-y)" }}>
+        <div className="ed-split" style={{ display: "grid", gridTemplateColumns: "5fr 7fr", gap: "var(--space-16)", alignItems: "center" }}>
+          <Reveal>
+            <div>
+              <div className="label label--on-dark">Since 1869</div>
+              <div className="numeral" style={{ fontSize: "clamp(5rem,3rem + 12vw,11rem)", color: "var(--gold-300)", marginTop: "0.6rem" }}>1869</div>
+              <p className="measure-narrow" style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.3rem,1.05rem + 1vw,1.7rem)", lineHeight: 1.45, color: "var(--cream-50)", marginTop: "1.4rem", fontWeight: 400 }}>
+                One hundred and fifty years of learning, in the heart of Kozhikode.
+              </p>
+            </div>
+          </Reveal>
+          <Reveal delay={120}>
+            <dl className="index-list" style={{ margin: 0 }}>
+              {facts.map((f) => (
+                <div key={f.k} className="index-row" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "1.5rem", padding: "1.25rem 0", borderColor: "var(--border-on-dark)" }}>
+                  <dt className="label label--on-dark" style={{ color: "var(--maroon-200)" }}>{f.k}</dt>
+                  <dd style={{ margin: 0, fontFamily: "var(--font-serif)", fontSize: "1.35rem", color: "var(--cream-50)", lineHeight: 1.2 }}>{f.v}</dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────  Programs (editorial index)  ───────────────────── */
+function Programs({ onNavigate }) {
   const stages = [
-    { icon: "baby",                t: "Pre-Primary",      d: "Play-based early years where curiosity is the first lesson." },
-    { icon: "pencil-simple-line",  t: "Primary",          d: "Strong foundations in language, numeracy and values." },
-    { icon: "books",               t: "Secondary",        d: "Rigorous academics balanced with sport, arts and service." },
-    { icon: "graduation-cap",      t: "Higher Secondary", d: "Science & Commerce streams that open every future." },
+    { n: "01", t: "Pre-Primary",       range: "Pre-KG – UKG",        d: "Play-based early years, where curiosity is the first lesson and confidence takes root." },
+    { n: "02", t: "Primary",           range: "Classes I – V",       d: "Strong foundations in language, numeracy and character, taught with patience and care." },
+    { n: "03", t: "Secondary",         range: "Classes VI – X",      d: "Academic rigour balanced with sport, the arts and a real culture of service." },
+    { n: "04", t: "Higher Secondary",  range: "Plus One – Plus Two", d: "Science and Commerce streams that prepare students for university and what follows." },
   ];
   return (
     <section className="section">
       <div className="container container--wide">
-        <Reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: "1rem", flexWrap: "wrap", marginBottom: "var(--space-12)" }}>
-          <div>
-            <Kicker>Academics</Kicker>
-            <h2 style={{ fontSize: "var(--text-section)", fontWeight: 500, marginTop: "0.8rem", maxWidth: "16ch" }}>A continuous journey, Pre-KG to Plus Two</h2>
+        <Reveal>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: "1.5rem", flexWrap: "wrap" }}>
+            <div>
+              <div className="label">Academics</div>
+              <h2 style={{ fontSize: "var(--text-section)", fontWeight: 400, marginTop: "1rem", maxWidth: "16ch" }}>
+                A continuous education, Pre-KG to Plus Two
+              </h2>
+            </div>
+            <TextLink onClick={() => onNavigate("academics")}>Explore academics</TextLink>
           </div>
-          <Button variant="ghost" onClick={() => onNavigate("academics")} iconRight={<Icon name="arrow-right" size={16} />}>Explore academics</Button>
         </Reveal>
-        <div className="cards-4" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "var(--space-6)" }}>
+
+        <div className="index-list" style={{ marginTop: "var(--space-12)" }}>
           {stages.map((s, i) => (
-            <Reveal key={s.t} delay={i * 80} style={{ height: "100%" }}>
+            <Reveal key={s.t} delay={i * 70}>
               <div
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-6px)"; e.currentTarget.style.boxShadow = "var(--shadow-lg)"; e.currentTarget.style.borderColor = "var(--maroon-200)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "var(--shadow-sm)"; e.currentTarget.style.borderColor = "var(--border-subtle)"; }}
-                style={{ background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", padding: "1.6rem", height: "100%", boxShadow: "var(--shadow-sm)", transition: "transform var(--dur) var(--ease-out),box-shadow var(--dur) var(--ease-out),border-color var(--dur)" }}>
-                <div style={{ width: 52, height: 52, borderRadius: "var(--radius-md)", background: "var(--maroon-50)", color: "var(--maroon-700)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.1rem" }}>
-                  <Icon name={s.icon} size={28} />
+                className="index-row ed-index-row"
+                onMouseEnter={(e) => { e.currentTarget.querySelector(".ed-num").style.color = "var(--maroon-700)"; e.currentTarget.querySelector(".ed-title").style.color = "var(--maroon-800)"; }}
+                onMouseLeave={(e) => { e.currentTarget.querySelector(".ed-num").style.color = "var(--sand-400)"; e.currentTarget.querySelector(".ed-title").style.color = "var(--text-primary)"; }}
+                style={{ display: "grid", gridTemplateColumns: "auto 4fr 6fr", alignItems: "baseline", gap: "1.5rem", padding: "clamp(1.4rem,2.5vw,2.2rem) 0", transition: "background var(--dur)" }}
+              >
+                <span className="ed-num numeral" style={{ fontSize: "1.6rem", color: "var(--sand-400)", transition: "color var(--dur)", minWidth: "2.2ch" }}>{s.n}</span>
+                <div>
+                  <h3 className="ed-title" style={{ fontSize: "clamp(1.5rem,1.2rem + 1vw,2.1rem)", fontWeight: 400, transition: "color var(--dur)" }}>{s.t}</h3>
+                  <div className="label" style={{ marginTop: "0.6rem", color: "var(--text-muted)" }}>{s.range}</div>
                 </div>
-                <h3 style={{ fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.5rem" }}>{s.t}</h3>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.92rem", lineHeight: 1.6, color: "var(--text-secondary)" }}>{s.d}</p>
+                <p className="ed-index-desc" style={{ fontFamily: "var(--font-sans)", fontSize: "1.15rem", lineHeight: 1.7, color: "var(--text-secondary)", maxWidth: "42ch" }}>{s.d}</p>
               </div>
             </Reveal>
           ))}
@@ -190,35 +216,44 @@ function Academics({ onNavigate }) {
   );
 }
 
-/* ─── Facilities ─── */
-function Facilities() {
+/* ───────────────────  Campus & facilities (image + list)  ─────────────────── */
+function Campus({ onNavigate }) {
   const fac = [
-    { icon: "desktop",           t: "Computer Lab" }, { icon: "flask",            t: "Science Labs" },
-    { icon: "books",             t: "Library" },       { icon: "bus",             t: "Transportation" },
-    { icon: "fork-knife",        t: "Canteen" },        { icon: "first-aid-kit",   t: "Medical Care" },
-    { icon: "swimming-pool",     t: "Swimming Pools" }, { icon: "basketball",      t: "Play Courts" },
-    { icon: "microphone-stage",  t: "Open-Air Auditorium" }, { icon: "tree",       t: "Green Campus" },
+    "Science & Computer Laboratories", "Library & Reading Room",
+    "Swimming Pools", "Indoor & Outdoor Play Courts",
+    "Open-Air Auditorium", "Medical Care",
+    "School Transportation", "Canteen",
   ];
   return (
     <section className="section" style={{ background: "var(--surface-raised)" }}>
       <div className="container container--wide">
-        <div className="fac-layout" style={{ display: "grid", gridTemplateColumns: "1fr 1.1fr", gap: "var(--space-16)", alignItems: "center" }}>
+        <div className="ed-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-16)", alignItems: "center" }}>
           <Reveal>
-            <Img src={IMG.faculty} alt="Campus facilities" style={{ borderRadius: "var(--radius-xl)", aspectRatio: "5/4", boxShadow: "var(--shadow-lg)" }} />
+            <div className="photo photo-frame" style={{ borderRadius: "2px" }}>
+              <Img src={IMG.faculty} alt="Students and teachers on the Sri Gujarati Vidyalaya campus" style={{ aspectRatio: "5/4" }} />
+            </div>
           </Reveal>
           <Reveal delay={100}>
-            <Kicker>Campus &amp; Facilities</Kicker>
-            <h2 style={{ fontSize: "var(--text-section)", fontWeight: 500, margin: "0.8rem 0 1.6rem", maxWidth: "18ch" }}>Everything a young mind needs to flourish</h2>
-            <div className="fac-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "0.8rem" }}>
-              {fac.map((f) => (
-                <div key={f.t}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "var(--maroon-700)"; e.currentTarget.style.borderColor = "var(--maroon-700)"; e.currentTarget.querySelector(".fac-i").style.color = "var(--gold-300)"; e.currentTarget.querySelector(".fac-t").style.color = "var(--cream-50)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "var(--surface-card)"; e.currentTarget.style.borderColor = "var(--border-subtle)"; e.currentTarget.querySelector(".fac-i").style.color = "var(--gold-700)"; e.currentTarget.querySelector(".fac-t").style.color = "var(--text-primary)"; }}
-                  style={{ display: "flex", alignItems: "center", gap: "0.8rem", background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", padding: "0.85rem 1rem", cursor: "default", transition: "background var(--dur),border-color var(--dur)" }}>
-                  <Icon name={f.icon} size={22} className="fac-i" style={{ color: "var(--gold-700)", transition: "color var(--dur)" }} />
-                  <span className="fac-t" style={{ fontFamily: "var(--font-sans)", fontWeight: 500, fontSize: "0.92rem", color: "var(--text-primary)", transition: "color var(--dur)" }}>{f.t}</span>
-                </div>
-              ))}
+            <div>
+              <div className="label">The Campus</div>
+              <h2 style={{ fontSize: "var(--text-section)", fontWeight: 400, margin: "1rem 0 1.4rem", maxWidth: "18ch" }}>
+                A green, calm campus near Mananchira
+              </h2>
+              <p className="measure" style={{ fontFamily: "var(--font-sans)", fontSize: "1.18rem", lineHeight: 1.7, color: "var(--text-secondary)", marginBottom: "2rem" }}>
+                Everything a young mind needs to flourish — laboratories, library, sport and the open
+                air — set within an eco-friendly campus in the heart of the city.
+              </p>
+              <ul className="index-list" style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                {fac.map((f) => (
+                  <li key={f} className="index-row" style={{ display: "flex", alignItems: "center", gap: "0.9rem", padding: "0.85rem 0" }}>
+                    <Icon name="circle" weight="fill" size={6} style={{ color: "var(--gold-600)" }} />
+                    <span style={{ fontFamily: "var(--font-sans)", fontSize: "1.1rem", color: "var(--ink-800)" }}>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <div style={{ marginTop: "2rem" }}>
+                <TextLink onClick={() => onNavigate("gallery")}>See the campus</TextLink>
+              </div>
             </div>
           </Reveal>
         </div>
@@ -227,151 +262,84 @@ function Facilities() {
   );
 }
 
-/* ─── Heritage Timeline ─── */
-function Timeline() {
-  const milestones = [
-    { year: "1869",  t: "The school is founded",   d: "Established by the Gujarati community to bring quality education to Kozhikode." },
-    { year: "1950s", t: "Recognition & growth",    d: "Becomes a recognised institution, expanding from primary to secondary." },
-    { year: "1990s", t: "A serene new campus",     d: "The school grows into its eco-friendly campus near Mananchira." },
-    { year: "Today", t: "Higher Secondary excellence", d: "Science & Commerce streams, modern labs and a 150-year living legacy." },
-  ];
-  const [active, setActive] = useState(0);
-  return (
-    <section className="section">
-      <div className="container container--wide">
-        <Reveal style={{ textAlign: "center", marginBottom: "var(--space-12)" }}>
-          <Kicker>Since 1869</Kicker>
-          <h2 style={{ fontSize: "var(--text-section)", fontWeight: 500, marginTop: "0.8rem" }}>One hundred and fifty years, one purpose</h2>
-        </Reveal>
-        <Reveal>
-          <div style={{ position: "relative", display: "flex", justifyContent: "space-between", margin: "0 auto 2.6rem", maxWidth: 880 }}>
-            <div style={{ position: "absolute", top: 13, left: "6%", right: "6%", height: 2, background: "var(--sand-300)" }} />
-            <div style={{ position: "absolute", top: 13, left: "6%", width: `${(active / (milestones.length - 1)) * 88}%`, height: 2, background: "var(--gold-500)", transition: "width var(--dur-slow) var(--ease-out)" }} />
-            {milestones.map((m, i) => (
-              <button key={m.year} onClick={() => setActive(i)} style={{ position: "relative", zIndex: 1, background: "transparent", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.6rem", flex: 1 }}>
-                <span style={{ width: 26, height: 26, borderRadius: "50%", background: i <= active ? "var(--gold-500)" : "var(--surface-card)", border: `2px solid ${i <= active ? "var(--gold-500)" : "var(--sand-400)"}`, display: "flex", alignItems: "center", justifyContent: "center", transition: "all var(--dur)" }}>
-                  {i === active && <span style={{ width: 9, height: 9, borderRadius: "50%", background: "var(--maroon-900)" }} />}
-                </span>
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "1.05rem", color: i === active ? "var(--maroon-800)" : "var(--text-muted)" }}>{m.year}</span>
-              </button>
-            ))}
-          </div>
-        </Reveal>
-        <Reveal>
-          <div style={{ maxWidth: 680, margin: "0 auto", textAlign: "center" }}>
-            <h3 style={{ fontFamily: "var(--font-display)", fontSize: "1.7rem", fontWeight: 500, marginBottom: "0.7rem" }}>{milestones[active].t}</h3>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.05rem", lineHeight: 1.7, color: "var(--text-secondary)" }}>{milestones[active].d}</p>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Principal ─── */
+/* ─────────────────────  Principal's note (signed letter)  ───────────────────── */
 function Principal({ onNavigate }) {
   return (
-    <section className="section" style={{ background: "var(--maroon-950)", color: "var(--cream-50)" }}>
-      <div className="container container--wide principal-grid" style={{ display: "grid", gridTemplateColumns: "0.8fr 1.2fr", gap: "var(--space-16)", alignItems: "center" }}>
-        <Reveal>
-          <div style={{ position: "relative", maxWidth: 360 }}>
-            <Img src={IMG.principal} alt="Vimala Jayaraj, Principal" style={{ borderRadius: "var(--radius-xl)", aspectRatio: "4/5", boxShadow: "var(--shadow-xl)" }} />
-            <div style={{ position: "absolute", bottom: "-18px", left: "-18px", background: "var(--gold-500)", color: "var(--ink-900)", borderRadius: "var(--radius-md)", padding: "0.7rem 1rem", fontFamily: "var(--font-display)", boxShadow: "var(--shadow-lg)" }}>
-              <div style={{ fontSize: "1.05rem", fontWeight: 600, lineHeight: 1.1 }}>Vimala Jayaraj</div>
-              <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>Principal</div>
-            </div>
-          </div>
-        </Reveal>
-        <Reveal delay={120}>
-          <Kicker tone="inverse">Principal's Desk</Kicker>
-          <Icon name="quotes" weight="fill" size={44} style={{ color: "var(--gold-400)", margin: "1.2rem 0 0.5rem", display: "block" }} />
-          <p style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.3rem,1rem + 1.2vw,1.85rem)", lineHeight: 1.5, fontWeight: 400, fontStyle: "italic", color: "var(--cream-50)", marginBottom: "1.6rem", maxWidth: "34ch" }}>
-            I am honoured to lead an institution that has been a beacon of education for over 153 years — nurturing the total development of each child in a serene, eco-friendly home of learning.
-          </p>
-          <Button variant="inverse" onClick={() => onNavigate("about")} iconRight={<Icon name="arrow-right" size={16} />}>Read the full message</Button>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Testimonials ─── */
-function Testimonials() {
-  const quotes = [
-    { q: "The teachers know my daughter as an individual. She has grown in confidence and kindness in equal measure.", n: "Meera Nair",  r: "Parent, Class VI" },
-    { q: "Gujarati gave me roots and wings — discipline, friendships and the curiosity that carried me to medical college.", n: "Arjun Menon", r: "Alumnus, 2016" },
-    { q: "A green, calm campus where my son actually looks forward to going to school every morning.", n: "Priya Shah",   r: "Parent, Class III" },
-  ];
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setI((p) => (p + 1) % quotes.length), 6000);
-    return () => clearInterval(t);
-  }, []);
-  return (
     <section className="section">
-      <div className="container container--narrow" style={{ textAlign: "center" }}>
+      <div className="container container--narrow">
         <Reveal>
-          <Kicker>In their words</Kicker>
-          <div style={{ position: "relative", marginTop: "2rem", minHeight: 200 }}>
-            <p style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.4rem,1.1rem + 1.4vw,2.1rem)", lineHeight: 1.45, color: "var(--text-primary)", fontStyle: "italic", marginBottom: "1.8rem" }}>
-              &ldquo;{quotes[i].q}&rdquo;
-            </p>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.8rem" }}>
-              <Avatar name={quotes[i].n} size="md" ring />
-              <div style={{ textAlign: "left" }}>
-                <div style={{ fontFamily: "var(--font-sans)", fontWeight: 700, fontSize: "0.95rem" }}>{quotes[i].n}</div>
-                <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.82rem", color: "var(--text-muted)" }}>{quotes[i].r}</div>
+          <div className="ed-2col" style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "var(--space-12)", alignItems: "start" }}>
+            <div style={{ width: "clamp(120px,18vw,180px)" }}>
+              <div className="photo photo-frame">
+                <Img src={IMG.principal} alt="Vimala Jayaraj, Principal" style={{ aspectRatio: "4/5" }} />
+              </div>
+            </div>
+            <div>
+              <div className="label">From the Principal</div>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.4rem,1.05rem + 1.5vw,2.05rem)", lineHeight: 1.5, fontWeight: 400, color: "var(--text-primary)", marginTop: "1.4rem" }}>
+                I am honoured to lead an institution that has been a beacon of education for over a
+                century and a half — nurturing each child in a serene home of learning, where wisdom
+                grows alongside kindness.
+              </p>
+              <div style={{ marginTop: "2rem", display: "flex", alignItems: "center", gap: "1.2rem", flexWrap: "wrap" }}>
+                <div>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: "1.3rem", color: "var(--maroon-800)" }}>Vimala Jayaraj</div>
+                  <div className="label" style={{ marginTop: "0.2rem" }}>Principal</div>
+                </div>
+                <span aria-hidden style={{ width: 1, height: 34, background: "var(--border-strong)" }} />
+                <TextLink onClick={() => onNavigate("about")}>Read the full message</TextLink>
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", marginTop: "2rem" }}>
-            {quotes.map((_, k) => (
-              <button key={k} onClick={() => setI(k)} aria-label={`Quote ${k + 1}`} style={{ width: k === i ? 28 : 10, height: 10, borderRadius: "var(--radius-pill)", border: "none", cursor: "pointer", background: k === i ? "var(--maroon-700)" : "var(--sand-400)", transition: "all var(--dur)" }} />
-            ))}
-          </div>
         </Reveal>
       </div>
     </section>
   );
 }
 
-/* ─── News & Events ─── */
+/* ────────────────────────  News & events (list)  ──────────────────────── */
 function News({ onNavigate }) {
   const items = [
-    { img: IMG.news_plusone, d: "27", m: "Jun", t: "Plus One Admission 2024-25",  c: "Admissions" },
-    { img: IMG.news_mla,     d: "03", m: "Jul", t: "MLA's Excellence Award 2023", c: "Achievement" },
-    { img: IMG.news_yoga,    d: "21", m: "Jun", t: "International Yoga Day",       c: "Event" },
-    { img: IMG.news_ocean,   d: "08", m: "Jun", t: "World Ocean Day",              c: "Event" },
+    { img: IMG.news_plusone, d: "27", m: "Jun", y: "2024", t: "Plus One admissions open for 2024–25", c: "Admissions" },
+    { img: IMG.news_mla,     d: "03", m: "Jul", y: "2023", t: "School honoured with the MLA's Excellence Award", c: "Achievement" },
+    { img: IMG.news_yoga,    d: "21", m: "Jun", y: "2023", t: "International Yoga Day observed on campus", c: "Campus" },
+    { img: IMG.news_ocean,   d: "08", m: "Jun", y: "2023", t: "World Ocean Day — a lesson beyond the classroom", c: "Campus" },
   ];
   return (
     <section className="section" style={{ background: "var(--surface-raised)" }}>
       <div className="container container--wide">
-        <Reveal style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: "1rem", flexWrap: "wrap", marginBottom: "var(--space-12)" }}>
-          <div>
-            <Kicker>Latest happenings</Kicker>
-            <h2 style={{ fontSize: "var(--text-section)", fontWeight: 500, marginTop: "0.8rem" }}>News &amp; Events</h2>
+        <Reveal>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: "1.5rem", flexWrap: "wrap" }}>
+            <div>
+              <div className="label">From the School</div>
+              <h2 style={{ fontSize: "var(--text-section)", fontWeight: 400, marginTop: "1rem" }}>News &amp; events</h2>
+            </div>
+            <TextLink onClick={() => onNavigate("gallery")}>View all</TextLink>
           </div>
-          <Button variant="ghost" onClick={() => onNavigate("gallery")} iconRight={<Icon name="arrow-right" size={16} />}>View all news</Button>
         </Reveal>
-        <div className="cards-4" style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "var(--space-6)" }}>
+
+        <div className="index-list" style={{ marginTop: "var(--space-12)" }}>
           {items.map((n, i) => (
-            <Reveal key={n.t} delay={i * 80} style={{ height: "100%" }}>
+            <Reveal key={n.t} delay={i * 70}>
               <article
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-6px)"; e.currentTarget.style.boxShadow = "var(--shadow-lg)"; const im = e.currentTarget.querySelector("img"); if (im) im.style.transform = "scale(1.06)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "var(--shadow-md)"; const im = e.currentTarget.querySelector("img"); if (im) im.style.transform = "scale(1)"; }}
-                style={{ background: "var(--surface-card)", borderRadius: "var(--radius-lg)", overflow: "hidden", boxShadow: "var(--shadow-md)", height: "100%", display: "flex", flexDirection: "column", transition: "transform var(--dur) var(--ease-out),box-shadow var(--dur) var(--ease-out)" }}>
-                <div style={{ position: "relative", overflow: "hidden" }}>
-                  <Img src={n.img} alt={n.t} style={{ height: 170 }} />
-                  <div style={{ position: "absolute", top: 12, left: 12, background: "var(--surface-card)", borderRadius: "var(--radius-sm)", padding: "0.35rem 0.6rem", textAlign: "center", boxShadow: "var(--shadow-sm)" }}>
-                    <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "1.15rem", lineHeight: 1, color: "var(--maroon-800)" }}>{n.d}</div>
-                    <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.62rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)" }}>{n.m}</div>
+                onClick={() => onNavigate("gallery")}
+                onMouseEnter={(e) => { const im = e.currentTarget.querySelector("img"); if (im) im.style.transform = "scale(1.05)"; e.currentTarget.querySelector(".ed-news-t").style.color = "var(--maroon-800)"; }}
+                onMouseLeave={(e) => { const im = e.currentTarget.querySelector("img"); if (im) im.style.transform = "scale(1)"; e.currentTarget.querySelector(".ed-news-t").style.color = "var(--text-primary)"; }}
+                className="index-row ed-index-row"
+                style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", alignItems: "center", gap: "clamp(1rem,3vw,2.4rem)", padding: "1.4rem 0", cursor: "pointer" }}
+              >
+                <div className="photo photo-frame" style={{ width: "clamp(84px,12vw,128px)", flexShrink: 0 }}>
+                  <Img src={n.img} alt={n.t} style={{ aspectRatio: "4/3" }} />
+                </div>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "0.55rem", flexWrap: "wrap" }}>
+                    <span className="label" style={{ color: "var(--gold-700)" }}>{n.c}</span>
+                    <span aria-hidden style={{ width: 1, height: 11, background: "var(--border-strong)" }} />
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", color: "var(--text-muted)", letterSpacing: "0.04em" }}>{`${n.d} ${n.m} ${n.y}`}</span>
                   </div>
+                  <h3 className="ed-news-t" style={{ fontSize: "clamp(1.15rem,1rem + 0.6vw,1.5rem)", fontWeight: 400, lineHeight: 1.25, transition: "color var(--dur)", maxWidth: "30ch" }}>{n.t}</h3>
                 </div>
-                <div style={{ padding: "1.1rem 1.2rem 1.3rem", display: "flex", flexDirection: "column", gap: "0.6rem", flex: 1 }}>
-                  <Badge tone="neutral" style={{ alignSelf: "flex-start" }}>{n.c}</Badge>
-                  <h3 style={{ fontSize: "1.05rem", fontWeight: 600, lineHeight: 1.3 }}>{n.t}</h3>
-                  <a style={{ marginTop: "auto", fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "0.85rem", color: "var(--maroon-700)", cursor: "pointer", display: "inline-flex", gap: "0.3rem", alignItems: "center" }}>Read more <Icon name="arrow-right" size={14} /></a>
-                </div>
+                <Icon name="arrow-up-right" size={22} style={{ color: "var(--maroon-600)", justifySelf: "end" }} />
               </article>
             </Reveal>
           ))}
@@ -381,22 +349,28 @@ function News({ onNavigate }) {
   );
 }
 
-/* ─── Admissions CTA ─── */
+/* ─────────────────────────  Admissions CTA (quiet)  ───────────────────────── */
 function AdmissionsCTA({ onNavigate }) {
   return (
-    <section style={{ padding: "var(--section-y) 0" }}>
+    <section className="section">
       <div className="container container--wide">
         <Reveal>
-          <div style={{ position: "relative", overflow: "hidden", borderRadius: "var(--radius-2xl)", background: "linear-gradient(120deg,var(--maroon-800),var(--maroon-950))", padding: "clamp(2.5rem,5vw,4.5rem)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "var(--space-12)", flexWrap: "wrap" }}>
-            <img src="/assets/crest-cream.png" alt="" style={{ position: "absolute", right: "-40px", bottom: "-60px", height: "150%", opacity: 0.06 }} />
-            <div style={{ position: "relative", maxWidth: "32ch" }}>
-              <Badge tone="gold" dot style={{ background: "rgba(248,240,220,.16)", color: "var(--gold-300)", marginBottom: "1.2rem" }}>Admissions Open 2026-27</Badge>
-              <h2 style={{ color: "var(--cream-50)", fontWeight: 500, fontSize: "clamp(1.9rem,1.3rem + 2.4vw,3rem)", lineHeight: 1.08 }}>Begin your child's journey with us</h2>
-              <p style={{ fontFamily: "var(--font-sans)", color: "var(--maroon-100)", fontSize: "1.05rem", marginTop: "1rem", lineHeight: 1.6 }}>A warm, guided admissions experience — enquire today and book a visit to our campus.</p>
+          <div className="ed-2col" style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: "var(--space-12)", alignItems: "center", borderTop: "1px solid var(--border-strong)", borderBottom: "1px solid var(--border-strong)", padding: "clamp(2.5rem,5vw,4.5rem) 0" }}>
+            <div>
+              <div className="label">Admissions 2026–27</div>
+              <h2 style={{ fontSize: "clamp(2rem,1.4rem + 2.6vw,3.4rem)", fontWeight: 400, marginTop: "1rem", maxWidth: "16ch", lineHeight: 1.08 }}>
+                Begin your child's journey with us.
+              </h2>
+              <p className="measure-narrow" style={{ fontFamily: "var(--font-sans)", fontSize: "1.18rem", lineHeight: 1.7, color: "var(--text-secondary)", marginTop: "1.2rem" }}>
+                Enquiries for the coming year are open. We warmly welcome families to visit our
+                campus at Mananchira.
+              </p>
             </div>
-            <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: "0.85rem", minWidth: 240 }}>
-              <Button size="lg" variant="accent" fullWidth onClick={() => onNavigate("admissions")} iconRight={<Icon name="arrow-right" size={18} />}>Apply Now</Button>
-              <Button size="lg" variant="inverse" fullWidth onClick={() => onNavigate("contact")} iconLeft={<Icon name="calendar-check" size={18} />}>Book a Campus Visit</Button>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem", alignItems: "flex-start" }}>
+              <Button size="lg" onClick={() => onNavigate("admissions")} iconRight={<Icon name="arrow-right" size={18} />}>Begin an enquiry</Button>
+              <a href="tel:04952365215" style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--text-secondary)", letterSpacing: "0.02em" }}>
+                <Icon name="phone" size={16} style={{ color: "var(--maroon-700)" }} /> 0495 236 5215
+              </a>
             </div>
           </div>
         </Reveal>
@@ -405,19 +379,16 @@ function AdmissionsCTA({ onNavigate }) {
   );
 }
 
-/* ─── Page composition ─── */
+/* ───────────────────────────  Composition  ─────────────────────────── */
 export function HomePage({ onNavigate }) {
   return (
     <div>
       <Hero onNavigate={onNavigate} />
-      <TrustBar />
-      <About onNavigate={onNavigate} />
-      <Glance />
-      <Academics onNavigate={onNavigate} />
-      <Facilities />
-      <Timeline />
+      <Intro onNavigate={onNavigate} />
+      <HeritageBand />
+      <Programs onNavigate={onNavigate} />
+      <Campus onNavigate={onNavigate} />
       <Principal onNavigate={onNavigate} />
-      <Testimonials />
       <News onNavigate={onNavigate} />
       <AdmissionsCTA onNavigate={onNavigate} />
     </div>
