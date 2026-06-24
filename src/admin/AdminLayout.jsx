@@ -1,10 +1,11 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Icon } from "../components/Icon";
 import { useAuth } from "./lib/auth.jsx";
+import { RESOURCES } from "./lib/resources.js";
 
 const LINKS = [
   { to: "/admin", label: "Dashboard", icon: "squares-four", end: true },
-  { to: "/admin/news", label: "News & Events", icon: "newspaper" },
+  ...RESOURCES.map((r) => ({ to: `/admin/${r.path}`, label: r.label, icon: r.icon })),
 ];
 
 export function AdminLayout() {

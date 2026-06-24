@@ -123,12 +123,17 @@ Locked decisions for all current and future work:
 /api
   /auth      (login, logout, me)
   /news      [implemented]
-  /faculty   [next]
-  /gallery   [next]
-  /jobs      [next]
-  /alumni    [next]
+  /faculty   [implemented]
+  /gallery   [implemented — photos + video embeds]
+  /jobs      [implemented]
+  /alumni    [implemented]
   /uploads   [implemented — Supabase Storage]
 ```
+
+All resource CRUD is generated from a shared factory (`api/_lib/crud.js`) +
+per-resource config (`api/_lib/schemas.js`); the admin UI is generated from
+`src/admin/lib/resources.js` via generic `ResourceList`/`ResourceForm`. Adding a
+module = one schema entry + one resources.js entry + a DB table.
 
 ### Shared backend code (`api/_lib`)
 ```

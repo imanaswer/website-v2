@@ -191,13 +191,14 @@ SETUP.md                 full provisioning guide
 
 ## 🗺️ Status & roadmap
 
-**Live now:** full public site · admin login · **News & Events** management
-(create/edit/delete/publish + photo upload) · Supabase Storage uploads ·
-friendly errors throughout.
+**Live now:** full public site · admin login · a config-driven CMS managing
+**News & Events, Faculty, Hiring/Jobs, Alumni, and Gallery (photos + video
+links)** — each with create/edit/delete, publish toggles, photo uploads to
+Supabase Storage, and friendly errors throughout.
 
-**Next (same pattern):** Faculty · Jobs · Gallery · Alumni admin modules, then
-wiring the public pages to read from the API. The CMS is designed so future
-modules — Admissions, Downloads, Events, Settings — drop in without
+**Next:** wire the public pages to read from the API (so admin edits appear on
+the site). The CMS is config-driven, so future modules — Admissions, Downloads,
+Events, Settings — are added with a single config entry + a DB table, no
 architectural changes.
 
 ---

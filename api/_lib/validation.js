@@ -39,3 +39,18 @@ export function intId(value) {
   if (!Number.isInteger(n) || n <= 0) throw new ApiError(404, "not_found", "That item could not be found.");
   return n;
 }
+
+export function int(body, field, fallback = 0) {
+  const v = body?.[field];
+  if (v == null || v === "") return fallback;
+  const n = Number(v);
+  if (!Number.isFinite(n)) throw new ApiError(400, "invalid_number", `${field} must be a number.`);
+  return Math.trunc(n);
+}
+
+export function oneOf(body, field, allowed, fallback) {
+  const v = body?.[field];
+  if (v == null || v === "") return fallback;
+  if (!allowed.includes(v)) throw new ApiError(400, "invalid_choice", `${field} must be one of: ${allowed.join(", ")}.`);
+  return v;
+}

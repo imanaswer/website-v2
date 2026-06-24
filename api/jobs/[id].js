@@ -1,5 +1,5 @@
 import { withErrors } from "../_lib/response.js";
 import { item } from "../_lib/crud.js";
-import { news } from "../_lib/schemas.js";
+import { jobs } from "../_lib/schemas.js";
 
-export default withErrors(item(news));
+export default withErrors(item(jobs));
