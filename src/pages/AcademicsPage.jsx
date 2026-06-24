@@ -124,7 +124,7 @@ function FacultyNote({ onNavigate }) {
                 expects.
               </p>
               <div style={{ marginTop: "2rem" }}>
-                <TextLink onClick={() => onNavigate("admissions")}>Enquire about admissions</TextLink>
+                <TextLink onClick={() => onNavigate("faculty")}>Meet our faculty</TextLink>
               </div>
             </div>
           </div>

@@ -35,8 +35,9 @@ export function SiteFooter({ onNavigate }) {
         {col("Explore", [
           { label: "Heritage",        to: "about" },
           { label: "Academics",       to: "academics" },
-          { label: "Facilities",      to: "academics" },
+          { label: "Faculty",         to: "faculty" },
           { label: "Campus & Gallery",to: "gallery" },
+          { label: "Alumni",          to: "alumni" },
         ])}
         {col("Admissions", [
           { label: "Apply Now",   to: "admissions" },

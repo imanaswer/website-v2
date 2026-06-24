@@ -64,6 +64,20 @@ not a SaaS template).
   shed the chat-widget feel.
 - Card sections where they genuinely earn it.
 
+## Addendum (2026-06-24): Faculty & Alumni pages
+- **Faculty** — new dedicated page built on *real, verified* data from the
+  school's live faculty page: 18 named teachers with subjects and photos,
+  grouped by department (Languages; Mathematics & Sciences; Commerce; Computer
+  Science; Early Years & Arts), with Principal Vimala Jayaraj featured. Photos
+  hotlinked (verified 200/jpeg); rendered as uniform 1:1 squares (native ratio).
+- **Alumni** — new page with **clearly-marked placeholder** profiles
+  (`[Alumnus name]`, `Batch [year]`, `[role]`, `[quote]`, neutral silhouette)
+  because the school publishes no alumni data. A code comment flags them for
+  replacement. Real CTA links to Contact. No fabricated people.
+- **Wiring** — `faculty` and `alumni` added to `App.jsx` PAGES and the
+  `SiteHeader` nav (now 8 items); Academics "Our Teachers" links to Faculty;
+  footer "Explore" column updated.
+
 ## Accessibility / quality floor (from ui-ux-pro-max)
 4.5:1 contrast, visible focus rings, alt text, `prefers-reduced-motion`, 44px touch
 targets, 150–300ms micro-interactions, 65–75ch measure, SVG/icon-font icons (no emoji).
