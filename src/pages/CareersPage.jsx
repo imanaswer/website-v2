@@ -2,20 +2,17 @@ import { Icon } from "../components/Icon";
 import { Reveal } from "../components/Reveal";
 import { PageHero } from "../components/PageHero";
 import { TextLink, Label } from "../components/Ed";
+import { useApi } from "../lib/useApi";
 
 const HERO = "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/Faculty_.jpg";
 
-/*
- * PLACEHOLDER DATA — the school publishes no live vacancies, so these are
- * example postings. Replace, add to, or empty this array as roles open and
- * close. An empty array renders the "no current openings" state below.
- *   { role, department, type, location, closes }
- */
-const VACANCIES = [
-  { role: "[Subject] Teacher",        department: "[Department]",      type: "Full-time", location: "Mananchira, Kozhikode", closes: "[closing date]" },
-  { role: "[Subject] Teacher",        department: "Higher Secondary",  type: "Full-time", location: "Mananchira, Kozhikode", closes: "[closing date]" },
-  { role: "Montessori / Early Years", department: "Pre-Primary",       type: "Full-time", location: "Mananchira, Kozhikode", closes: "[closing date]" },
-];
+/* Vacancies are managed in the admin panel (/admin/jobs) — published roles
+ * appear here; when there are none, the "no current openings" state shows. */
+function fmtDate(d) {
+  if (!d) return "";
+  const date = new Date(d);
+  return Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" });
+}
 
 function Why() {
   const reasons = [
@@ -59,6 +56,8 @@ function Why() {
 }
 
 function Openings({ onNavigate }) {
+  const { data } = useApi("jobs");
+  const vacancies = Array.isArray(data) ? data : [];
   return (
     <section className="section" style={{ background: "var(--surface-raised)" }}>
       <div className="container container--wide">
@@ -69,7 +68,7 @@ function Openings({ onNavigate }) {
           </div>
         </Reveal>
 
-        {VACANCIES.length === 0 ? (
+        {vacancies.length === 0 ? (
           <Reveal>
             <div style={{ padding: "clamp(2rem,4vw,3.5rem) 0", maxWidth: "52ch" }}>
               <h2 style={{ fontSize: "clamp(1.6rem,1.2rem + 1.4vw,2.4rem)", fontWeight: 400, marginBottom: "1rem" }}>
@@ -83,9 +82,8 @@ function Openings({ onNavigate }) {
             </div>
           </Reveal>
         ) : (
-          /* PLACEHOLDER — replace VACANCIES entries with real postings */
           <div className="index-list">
-            {VACANCIES.map((v, i) => (
+            {vacancies.map((v, i) => (
               <Reveal key={i} delay={i * 60}>
                 <div
                   onMouseEnter={(e) => { e.currentTarget.querySelector(".ed-role").style.color = "var(--maroon-800)"; }}
@@ -98,8 +96,8 @@ function Openings({ onNavigate }) {
                     <div className="label" style={{ marginTop: "0.55rem", color: "var(--gold-700)" }}>{v.department}</div>
                   </div>
                   <div className="ed-index-desc" style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                    <span style={{ fontFamily: "var(--font-sans)", fontSize: "1.05rem", color: "var(--text-secondary)" }}>{v.type} · {v.location}</span>
-                    <span className="label" style={{ color: "var(--text-muted)" }}>Closes {v.closes}</span>
+                    <span style={{ fontFamily: "var(--font-sans)", fontSize: "1.05rem", color: "var(--text-secondary)" }}>{[v.type, v.location].filter(Boolean).join(" · ")}</span>
+                    {fmtDate(v.closes_on) && <span className="label" style={{ color: "var(--text-muted)" }}>Closes {fmtDate(v.closes_on)}</span>}
                   </div>
                   <TextLink onClick={() => onNavigate("contact")}>Apply</TextLink>
                 </div>

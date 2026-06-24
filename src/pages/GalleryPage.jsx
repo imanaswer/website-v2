@@ -3,6 +3,7 @@ import { Img } from "../components/Img";
 import { Icon } from "../components/Icon";
 import { Reveal } from "../components/Reveal";
 import { PageHero } from "../components/PageHero";
+import { useApi } from "../lib/useApi";
 
 const IMG = {
   campus:    "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/gujarati-school.jpg",
@@ -19,7 +20,8 @@ const IMG = {
   news_env:  "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/2-21-555x472.jpg",
 };
 
-const PHOTOS = [
+/* Curated fallback used until the gallery is populated in the admin. */
+const FALLBACK = [
   { src: IMG.campus,       cat: "Campus",       t: "The main campus" },
   { src: IMG.news_yoga,    cat: "Celebrations", t: "International Yoga Day" },
   { src: IMG.a1,           cat: "Academics",    t: "In the classroom" },
@@ -32,14 +34,27 @@ const PHOTOS = [
   { src: IMG.n1,           cat: "Sports",       t: "On the field" },
   { src: IMG.news_plusone, cat: "Academics",    t: "Plus One" },
   { src: IMG.n2,           cat: "Celebrations", t: "A school event" },
-];
+].map((p) => ({ ...p, kind: "photo" }));
 
-const CATS = ["All", "Campus", "Academics", "Sports", "Celebrations", "Arts"];
+function mapGallery(rows) {
+  return rows.map((r) => ({
+    id: r.id,
+    kind: r.kind === "video" ? "video" : "photo",
+    src: r.image_url,
+    video: r.video_url,
+    cat: r.category || "Campus",
+    t: r.title || "",
+  }));
+}
 
 export function GalleryPage({ onNavigate }) {
+  const { data } = useApi("gallery");
+  const items = Array.isArray(data) && data.length ? mapGallery(data) : FALLBACK;
+  const cats = ["All", ...Array.from(new Set(items.map((i) => i.cat).filter(Boolean)))];
+
   const [cat, setCat] = useState("All");
   const [box, setBox] = useState(null);
-  const shown = cat === "All" ? PHOTOS : PHOTOS.filter((p) => p.cat === cat);
+  const shown = cat === "All" ? items : items.filter((p) => p.cat === cat);
 
   return (
     <div>
@@ -50,15 +65,13 @@ export function GalleryPage({ onNavigate }) {
 
       <section className="section">
         <div className="container container--wide">
-          {/* text-tab filters */}
           <Reveal>
             <div style={{ display: "flex", gap: "clamp(1rem,2.5vw,2.4rem)", flexWrap: "wrap", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "1.1rem", marginBottom: "var(--space-12)" }}>
-              {CATS.map((c) => (
+              {cats.map((c) => (
                 <button key={c} onClick={() => setCat(c)} style={{
                   position: "relative", background: "none", border: 0, cursor: "pointer", padding: "0 0 0.4rem",
                   fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "1rem",
-                  color: cat === c ? "var(--maroon-800)" : "var(--text-muted)",
-                  transition: "color var(--dur)",
+                  color: cat === c ? "var(--maroon-800)" : "var(--text-muted)", transition: "color var(--dur)",
                 }}>
                   {c}
                   {cat === c && <span style={{ position: "absolute", left: 0, right: 0, bottom: "-1.15rem", height: 2, background: "var(--gold-500)" }} />}
@@ -69,18 +82,26 @@ export function GalleryPage({ onNavigate }) {
 
           <div className="masonry" style={{ columnCount: 3, columnGap: "var(--space-6)" }}>
             {shown.map((p, i) => (
-              <Reveal key={p.t + i} delay={(i % 6) * 50} style={{ breakInside: "avoid", marginBottom: "var(--space-8)" }}>
+              <Reveal key={(p.id ?? p.t) + "-" + i} delay={(i % 6) * 50} style={{ breakInside: "avoid", marginBottom: "var(--space-8)" }}>
                 <figure style={{ margin: 0 }}>
-                  <button onClick={() => setBox(p)}
-                    onMouseEnter={(e) => { const im = e.currentTarget.querySelector("img"); if (im) im.style.transform = "scale(1.04)"; }}
-                    onMouseLeave={(e) => { const im = e.currentTarget.querySelector("img"); if (im) im.style.transform = "scale(1)"; }}
-                    className="photo photo-frame"
-                    style={{ display: "block", width: "100%", padding: 0, border: 0, cursor: "pointer", overflow: "hidden", position: "relative" }}>
-                    <Img src={p.src} alt={p.t} style={{ width: "100%", aspectRatio: i % 3 === 0 ? "3/4" : i % 3 === 1 ? "4/3" : "1/1" }} />
-                  </button>
+                  {p.kind === "video" ? (
+                    <button onClick={() => p.video && window.open(p.video, "_blank", "noopener")}
+                      className="photo-frame"
+                      style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", aspectRatio: "16/9", padding: 0, border: 0, cursor: "pointer", background: "var(--maroon-900)", position: "relative" }}>
+                      <Icon name="play-circle" weight="fill" size={54} style={{ color: "var(--gold-300)" }} />
+                    </button>
+                  ) : (
+                    <button onClick={() => setBox(p)}
+                      onMouseEnter={(e) => { const im = e.currentTarget.querySelector("img"); if (im) im.style.transform = "scale(1.04)"; }}
+                      onMouseLeave={(e) => { const im = e.currentTarget.querySelector("img"); if (im) im.style.transform = "scale(1)"; }}
+                      className="photo photo-frame"
+                      style={{ display: "block", width: "100%", padding: 0, border: 0, cursor: "pointer", overflow: "hidden", position: "relative" }}>
+                      <Img src={p.src} alt={p.t} style={{ width: "100%", aspectRatio: i % 3 === 0 ? "3/4" : i % 3 === 1 ? "4/3" : "1/1" }} />
+                    </button>
+                  )}
                   <figcaption style={{ display: "flex", alignItems: "baseline", gap: "0.9rem", marginTop: "0.8rem" }}>
-                    <span className="label" style={{ color: "var(--gold-700)" }}>{p.cat}</span>
-                    <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", color: "var(--text-primary)" }}>{p.t}</span>
+                    <span className="label" style={{ color: "var(--gold-700)" }}>{p.kind === "video" ? "Video" : p.cat}</span>
+                    {p.t && <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", color: "var(--text-primary)" }}>{p.t}</span>}
                   </figcaption>
                 </figure>
               </Reveal>
@@ -89,7 +110,6 @@ export function GalleryPage({ onNavigate }) {
         </div>
       </section>
 
-      {/* Lightbox */}
       {box && (
         <div onClick={() => setBox(null)} style={{ position: "fixed", inset: 0, zIndex: 900, background: "rgba(22,15,9,.90)", display: "flex", alignItems: "center", justifyContent: "center", padding: "var(--gutter)", backdropFilter: "blur(4px)" }}>
           <button onClick={() => setBox(null)} aria-label="Close" style={{ position: "absolute", top: 24, right: 24, width: 48, height: 48, borderRadius: "50%", border: "1px solid var(--border-on-dark)", background: "rgba(252,249,243,.08)", color: "var(--cream-50)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -101,7 +121,7 @@ export function GalleryPage({ onNavigate }) {
             </div>
             <figcaption style={{ marginTop: "1.1rem", display: "flex", gap: "1rem", alignItems: "baseline", color: "var(--cream-50)" }}>
               <span className="label label--on-dark">{box.cat}</span>
-              <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.3rem", fontStyle: "italic" }}>{box.t}</span>
+              {box.t && <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.3rem", fontStyle: "italic" }}>{box.t}</span>}
             </figcaption>
           </figure>
         </div>

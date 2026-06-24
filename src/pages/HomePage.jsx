@@ -2,6 +2,20 @@ import { Img } from "../components/Img";
 import { Icon } from "../components/Icon";
 import { Reveal } from "../components/Reveal";
 import { Button } from "../components/Button";
+import { useApi } from "../lib/useApi";
+
+/* Map an API news row to the shape the News section renders. */
+function mapNews(row) {
+  const d = row.date ? new Date(row.date) : null;
+  return {
+    img: row.image_url,
+    d: d ? String(d.getUTCDate()).padStart(2, "0") : "",
+    m: d ? d.toLocaleString("en-US", { month: "short", timeZone: "UTC" }) : "",
+    y: d ? String(d.getUTCFullYear()) : "",
+    t: row.title,
+    c: row.category || "News",
+  };
+}
 
 const IMG = {
   campus:    "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/gujarati-school.jpg",
@@ -299,12 +313,14 @@ function Principal({ onNavigate }) {
 
 /* ────────────────────────  News & events (list)  ──────────────────────── */
 function News({ onNavigate }) {
-  const items = [
+  const FALLBACK = [
     { img: IMG.news_plusone, d: "27", m: "Jun", y: "2024", t: "Plus One admissions open for 2024–25", c: "Admissions" },
     { img: IMG.news_mla,     d: "03", m: "Jul", y: "2023", t: "School honoured with the MLA's Excellence Award", c: "Achievement" },
     { img: IMG.news_yoga,    d: "21", m: "Jun", y: "2023", t: "International Yoga Day observed on campus", c: "Campus" },
     { img: IMG.news_ocean,   d: "08", m: "Jun", y: "2023", t: "World Ocean Day — a lesson beyond the classroom", c: "Campus" },
   ];
+  const { data } = useApi("news");
+  const items = Array.isArray(data) && data.length ? data.slice(0, 4).map(mapNews) : FALLBACK;
   return (
     <section className="section" style={{ background: "var(--surface-raised)" }}>
       <div className="container container--wide">

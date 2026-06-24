@@ -1,23 +1,11 @@
 import { Icon } from "../components/Icon";
+import { Img } from "../components/Img";
 import { Reveal } from "../components/Reveal";
 import { PageHero } from "../components/PageHero";
 import { TextLink, Label } from "../components/Ed";
+import { useApi } from "../lib/useApi";
 
 const HERO = "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13-555x472.jpg";
-
-/*
- * PLACEHOLDER DATA — the school publishes no alumni details, so these are
- * deliberately blank. Replace each entry with a real alumnus (name, batch
- * year, current role, a short quote and a photo URL) when the data is ready.
- */
-const ALUMNI = [
-  { name: "[Alumnus name]", batch: "[year]", role: "[Current role / profession]", quote: "[A short line in their words about the school.]" },
-  { name: "[Alumnus name]", batch: "[year]", role: "[Current role / profession]", quote: "[A short line in their words about the school.]" },
-  { name: "[Alumnus name]", batch: "[year]", role: "[Current role / profession]", quote: "[A short line in their words about the school.]" },
-  { name: "[Alumnus name]", batch: "[year]", role: "[Current role / profession]", quote: "[A short line in their words about the school.]" },
-  { name: "[Alumnus name]", batch: "[year]", role: "[Current role / profession]", quote: "[A short line in their words about the school.]" },
-  { name: "[Alumnus name]", batch: "[year]", role: "[Current role / profession]", quote: "[A short line in their words about the school.]" },
-];
 
 function Silhouette() {
   return (
@@ -60,6 +48,10 @@ function Intro() {
 }
 
 function AlumniGrid() {
+  const { data } = useApi("alumni");
+  const alumni = Array.isArray(data) ? data : [];
+  // Until real alumni are added in the admin, show only the intro + CTA.
+  if (alumni.length === 0) return null;
   return (
     <section className="section" style={{ background: "var(--surface-raised)" }}>
       <div className="container container--wide">
@@ -69,19 +61,26 @@ function AlumniGrid() {
             <span className="rule" style={{ flex: 1 }} />
           </div>
         </Reveal>
-        {/* PLACEHOLDER — replace ALUMNI entries with real alumni data */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(330px, 1fr))", gap: "clamp(1.6rem,3vw,2.8rem)" }}>
-          {ALUMNI.map((a, i) => (
-            <Reveal key={i} delay={(i % 3) * 70}>
+          {alumni.map((a, i) => (
+            <Reveal key={a.id ?? i} delay={(i % 3) * 70}>
               <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem", paddingTop: "1.8rem", borderTop: "1px solid var(--border-subtle)", height: "100%" }}>
-                <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.35rem", lineHeight: 1.45, color: "var(--text-primary)", fontStyle: "italic" }}>
-                  &ldquo;{a.quote}&rdquo;
-                </p>
+                {a.quote && (
+                  <p style={{ fontFamily: "var(--font-serif)", fontSize: "1.35rem", lineHeight: 1.45, color: "var(--text-primary)", fontStyle: "italic" }}>
+                    &ldquo;{a.quote}&rdquo;
+                  </p>
+                )}
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginTop: "auto" }}>
-                  <Silhouette />
+                  {a.photo_url ? (
+                    <div className="photo photo-frame" style={{ width: "clamp(72px,9vw,96px)", aspectRatio: "1/1", flexShrink: 0, borderRadius: "50%", overflow: "hidden" }}>
+                      <Img src={a.photo_url} alt={a.name} style={{ width: "100%", height: "100%" }} />
+                    </div>
+                  ) : (
+                    <Silhouette />
+                  )}
                   <div>
                     <div style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", color: "var(--text-primary)" }}>{a.name}</div>
-                    <div className="label" style={{ marginTop: "0.3rem" }}>{a.role} · Batch {a.batch}</div>
+                    <div className="label" style={{ marginTop: "0.3rem" }}>{[a.role, a.batch_year && `Batch ${a.batch_year}`].filter(Boolean).join(" · ")}</div>
                   </div>
                 </div>
               </div>

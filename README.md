@@ -196,8 +196,11 @@ SETUP.md                 full provisioning guide
 links)** — each with create/edit/delete, publish toggles, photo uploads to
 Supabase Storage, and friendly errors throughout.
 
-**Next:** wire the public pages to read from the API (so admin edits appear on
-the site). The CMS is config-driven, so future modules — Admissions, Downloads,
+The **public pages read from the API** (Home news, Faculty, Gallery, Careers,
+Alumni), so admin edits appear on the live site — with a graceful fallback to
+curated content until the database is connected.
+
+**Next:** the CMS is config-driven, so future modules — Admissions, Downloads,
 Events, Settings — are added with a single config entry + a DB table, no
 architectural changes.
 

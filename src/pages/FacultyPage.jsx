@@ -2,6 +2,7 @@ import { Img } from "../components/Img";
 import { Reveal } from "../components/Reveal";
 import { PageHero } from "../components/PageHero";
 import { TextLink, Label } from "../components/Ed";
+import { useApi } from "../lib/useApi";
 
 const BASE = "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/";
 const HERO = "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/Faculty_.jpg";
@@ -54,11 +55,29 @@ const DEPARTMENTS = [
   },
 ];
 
+/* Curated fallback (with full photo URLs) used until the database is connected. */
+const FALLBACK_DEPARTMENTS = DEPARTMENTS.map((d) => ({
+  name: d.name,
+  people: d.people.map((p) => ({ ...p, img: BASE + p.img })),
+}));
+
+/* Group API faculty rows into departments, preserving sort order. */
+function buildDepartments(rows) {
+  const order = [];
+  const map = new Map();
+  for (const r of rows) {
+    const dept = r.department || "Faculty";
+    if (!map.has(dept)) { map.set(dept, []); order.push(dept); }
+    map.get(dept).push({ n: r.name, s: r.subject || "", img: r.photo_url || "" });
+  }
+  return order.map((name) => ({ name, people: map.get(name) }));
+}
+
 function PersonCard({ p }) {
   return (
     <figure style={{ margin: 0 }}>
       <div className="photo photo-frame">
-        <Img src={BASE + p.img} alt={`${p.n}, ${p.s}`} style={{ aspectRatio: "1/1" }} />
+        <Img src={p.img} alt={`${p.n}, ${p.s}`} style={{ aspectRatio: "1/1" }} />
       </div>
       <figcaption style={{ marginTop: "0.9rem" }}>
         <div style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", color: "var(--text-primary)", lineHeight: 1.25 }}>{p.n}</div>
@@ -135,6 +154,8 @@ function FacultyCTA({ onNavigate }) {
 }
 
 export function FacultyPage({ onNavigate }) {
+  const { data } = useApi("faculty");
+  const departments = Array.isArray(data) && data.length ? buildDepartments(data) : FALLBACK_DEPARTMENTS;
   return (
     <div>
       <PageHero onNavigate={onNavigate} crumb="Faculty" eyebrow="Our Faculty"
@@ -142,7 +163,7 @@ export function FacultyPage({ onNavigate }) {
         lead="A dedicated faculty across languages, the sciences, commerce, computing and the arts — guided by our Principal, Vimala Jayaraj."
         image={HERO} />
       <PrincipalFeature />
-      {DEPARTMENTS.map((dept, i) => <Department key={dept.name} dept={dept} index={i} />)}
+      {departments.map((dept, i) => <Department key={dept.name} dept={dept} index={i} />)}
       <FacultyCTA onNavigate={onNavigate} />
     </div>
   );
