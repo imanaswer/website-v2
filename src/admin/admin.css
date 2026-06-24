@@ -1,0 +1,40 @@
+/* Admin panel layout — reuses the site's design tokens. */
+.admin-shell {
+  display: grid;
+  grid-template-columns: 248px 1fr;
+  min-height: 100dvh;
+  background: var(--surface-page);
+}
+.admin-side {
+  background: var(--maroon-950);
+  color: var(--cream-100);
+  padding: 1.6rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+}
+.admin-navlink {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.7rem 0.9rem; border-radius: var(--radius-md);
+  font-family: var(--font-sans); font-size: 0.95rem; font-weight: 500;
+  color: var(--maroon-100); cursor: pointer; text-decoration: none;
+  transition: background var(--dur-fast), color var(--dur-fast);
+}
+.admin-navlink:hover { background: rgba(248,240,220,.08); color: var(--cream-50); }
+.admin-navlink.active { background: var(--maroon-800); color: var(--gold-300); }
+.admin-main { padding: clamp(1.4rem, 3vw, 3rem); max-width: 1100px; width: 100%; }
+.admin-card {
+  background: var(--surface-card); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg); padding: clamp(1.2rem, 2.5vw, 2rem);
+}
+.admin-row {
+  display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center;
+  padding: 1rem 0; border-top: 1px solid var(--border-subtle);
+}
+@media (max-width: 760px) {
+  .admin-shell { grid-template-columns: 1fr; }
+  .admin-side { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; }
+}
