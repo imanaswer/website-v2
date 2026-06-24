@@ -30,16 +30,18 @@ node scripts/hash-password.mjs 'your-strong-password'                       # �
 ```
 Pick an `ADMIN_USERNAME` (e.g. `admin`).
 
-## 3. Image uploads (Vercel Blob)
-In your Vercel project → **Storage** → create a **Blob** store. Copy the
-`BLOB_READ_WRITE_TOKEN`. (Uploads only work once this is set; everything else
-works without it.)
+## 3. File uploads (Supabase Storage)
+1. In Supabase → **Storage** → create a **public** bucket named `media`
+   (or set `SUPABASE_STORAGE_BUCKET` to whatever you name it).
+2. In Supabase → **Project Settings → API**, copy the **Project URL**
+   (`SUPABASE_URL`) and the **service_role** key (`SUPABASE_SERVICE_ROLE_KEY`).
+   The service role key is server-only — it is never sent to the browser.
 
 ## 4. Environment variables
-Copy `.env.example` → `.env.local` and fill in all five values:
-`DATABASE_URL`, `JWT_SECRET`, `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH`,
-`BLOB_READ_WRITE_TOKEN`. Set the **same** variables in the Vercel project
-(Settings → Environment Variables).
+Copy `.env.example` → `.env.local` and fill in: `DATABASE_URL`, `JWT_SECRET`,
+`ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH`, `SUPABASE_URL`,
+`SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_STORAGE_BUCKET`. Set the **same**
+variables in the Vercel project (Settings → Environment Variables).
 
 ## 5. Seed the starting content
 ```bash

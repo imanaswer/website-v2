@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { signSession, sessionCookie } from "../_lib/auth.js";
-import { withErrors, ApiError, Err } from "../_lib/errors.js";
+import { withErrors, sendData, ApiError, Err } from "../_lib/response.js";
 
 export default withErrors(async (req, res) => {
   if (req.method !== "POST") throw Err.badMethod();
@@ -19,5 +19,5 @@ export default withErrors(async (req, res) => {
 
   const token = await signSession(username);
   res.setHeader("Set-Cookie", sessionCookie(token));
-  res.status(200).json({ ok: true, user: { username } });
+  sendData(res, { user: { username } });
 });

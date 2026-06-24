@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 import { parse, serialize } from "cookie";
-import { Err } from "./errors.js";
+import { Err } from "./response.js";
 
 /*
  * Single-admin auth. A JWT is stored in an httpOnly cookie so it can't be read

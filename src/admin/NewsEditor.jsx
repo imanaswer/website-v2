@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { upload } from "@vercel/blob/client";
 import { Input } from "../components/Input";
 import { Checkbox } from "../components/Checkbox";
 import { Button } from "../components/Button";
 import { Icon } from "../components/Icon";
 import { Img } from "../components/Img";
-import { api } from "./lib/api.js";
+import { api, uploadFile } from "./lib/api.js";
 import { Notice } from "./ui/Notice.jsx";
 
 const EMPTY = { title: "", category: "", date: new Date().toISOString().slice(0, 10), body: "", image_url: "", published: false };
@@ -40,18 +39,18 @@ export function NewsEditor() {
       setNotice({ type: "error", message: "That file isn't a supported image. Please choose a JPG, PNG or WebP.", code: "bad_file_type" });
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      setNotice({ type: "error", message: "That photo is too large — please use one under 5 MB.", code: "file_too_large" });
+    if (file.size > 3 * 1024 * 1024) {
+      setNotice({ type: "error", message: "That photo is too large — please use one under 3 MB.", code: "file_too_large" });
       return;
     }
     setUploading(true);
     setNotice(null);
     try {
-      const blob = await upload(file.name, file, { access: "public", handleUploadUrl: "/api/upload" });
-      setForm((f) => ({ ...f, image_url: blob.url }));
+      const { url } = await uploadFile(file, "news");
+      setForm((f) => ({ ...f, image_url: url }));
       setNotice({ type: "success", message: "Photo uploaded." });
     } catch (err) {
-      setNotice({ type: "error", message: err?.message || "The photo couldn't be uploaded. Please try again in a moment.", code: "upload_failed" });
+      setNotice({ type: "error", message: err?.message || "The photo couldn't be uploaded. Please try again in a moment.", code: err?.code || "upload_failed" });
     } finally {
       setUploading(false);
     }

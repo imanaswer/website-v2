@@ -16,8 +16,12 @@ errors throughout.
 - **Auth:** single admin. Username + bcrypt password **hash stored in env vars**
   (no users table). Login issues a **JWT in an httpOnly cookie** (`jose`);
   admin endpoints verify it.
-- **Media:** images → **Vercel Blob** (free tier) via a signed `/api/upload`;
-  videos → stored as a YouTube/Vimeo URL and rendered as an embed.
+- **Media:** files → **Supabase Storage** (public bucket) via an admin-only
+  `/api/uploads` endpoint. The frontend base64-encodes the file and POSTs it to
+  our backend, which uploads it using the **service role key (server-only)** and
+  returns the public URL; only that URL/path is stored in Postgres. The frontend
+  never touches Supabase or any privileged key directly. Videos → stored as a
+  YouTube/Vimeo URL and rendered as an embed.
 - **Budget:** free tiers only.
 
 ## Architecture
@@ -26,9 +30,9 @@ Vercel project
 ├── Vite SPA  ── react-router ──┬── public pages (read /api)
 │                               └── /admin/* (protected admin panel)
 ├── /api/* serverless functions (public GET; admin POST/PUT/DELETE via JWT)
-│     /api/auth/{login,logout,me}   /api/upload (Blob)
+│     /api/auth/{login,logout,me}   /api/uploads (Supabase Storage)
 │     /api/{news,faculty,jobs,alumni,gallery}[/:id]
-└── Supabase Postgres  +  Vercel Blob (images)
+└── Supabase Postgres  +  Supabase Storage (files)
 ```
 
 ## Data model (Postgres)
@@ -43,7 +47,7 @@ Vercel project
 - `POST /api/auth/logout` → clear cookie. `GET /api/auth/me` → `{ authenticated }`.
 - Per resource: `GET /api/<r>` (public list), `GET /api/<r>/:id` (public),
   `POST /api/<r>` · `PUT /api/<r>/:id` · `DELETE /api/<r>/:id` (admin only).
-- `POST /api/upload` (admin) → image to Vercel Blob, returns `{ url }`.
+- `POST /api/uploads` (admin) → file to Supabase Storage, returns `{ url, path }`.
 - Public list endpoints only return `published` rows for news/jobs.
 
 ## Admin panel (`/admin`)
@@ -77,21 +81,71 @@ faculty, news items, etc.) so nothing starts empty.
 - `vercel.json`: SPA rewrite must **exclude** `/api/*` (use
   `/((?!api/).*)` → `/index.html`).
 - Env vars: `DATABASE_URL`, `JWT_SECRET`, `ADMIN_USERNAME`,
-  `ADMIN_PASSWORD_HASH`, `BLOB_READ_WRITE_TOKEN`. Documented in `.env.example`
-  and `SETUP.md`.
+  `ADMIN_PASSWORD_HASH`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
+  `SUPABASE_STORAGE_BUCKET`. Documented in `.env.example` and `SETUP.md`.
 
 ## Phasing (each independently shippable)
-- **Phase 0 — Foundations:** deps, `schema.sql`, `/api/_lib` (db, auth, errors),
-  auth endpoints, admin shell + protected routing, adopt react-router, setup docs.
+- **Phase 0 — Foundations:** deps, `schema.sql`, `/api/_lib` (db, auth, response,
+  validation, storage), auth endpoints, admin shell + protected routing, adopt
+  react-router, setup docs.
 - **Phase 1 — News slice:** news CRUD API + admin UI + image upload + public News
   reads from API. Proves the whole stack end-to-end.
 - **Phase 2 — Faculty · Jobs · Alumni:** replicate CRUD + admin + wire public
   pages; seed real faculty.
-- **Phase 3 — Media:** Blob uploads across content; video embeds.
+- **Phase 3 — Media:** Supabase Storage uploads across content; video embeds.
 - **Phase 4 — Gallery:** photos + video embeds.
 - **Phase 5 — Deploy & migrate:** Vercel project, env vars, seed, go live.
 
 ## What the user must provision (cannot be automated here)
-A Supabase project (free), a Vercel project, and the env-var secrets above
-(including generating `ADMIN_PASSWORD_HASH` with the provided script and a
-`BLOB_READ_WRITE_TOKEN` from Vercel Blob). `SETUP.md` gives exact steps.
+A Supabase project (free) with a public storage bucket, a Vercel project, and
+the env-var secrets above (including generating `ADMIN_PASSWORD_HASH` with the
+provided script and the Supabase service role key). `SETUP.md` gives exact steps.
+
+## Final architecture (2026-06-24 update)
+Locked decisions for all current and future work:
+
+- **Frontend:** React + Vite SPA on Vercel. It **only consumes the REST API** —
+  it never queries Postgres or talks to Supabase with privileged credentials.
+- **Backend:** Vercel Serverless Functions under `/api` — no Express server,
+  modular and RESTful.
+- **Database:** Supabase Postgres via `postgres.js` over the **Transaction
+  Pooler (port 6543)**, keeping the existing `api/_lib/db.js` config. The service
+  role key is never exposed to the frontend.
+- **Storage:** Supabase Storage for **all** uploaded assets (news images,
+  faculty photos, gallery images, PDFs, documents, logos…). Only the public
+  URL/path is stored in Postgres. Uploads use the reusable `uploadAsset()` util
+  in `api/_lib/storage.js` behind the admin-only `/api/uploads` endpoint.
+- **Auth:** admin only, always via backend API endpoints (JWT in an httpOnly
+  cookie). The frontend never authenticates against Supabase directly.
+
+### API layout (each endpoint: validate input · consistent JSON · graceful errors · extendable)
+```
+/api
+  /auth      (login, logout, me)
+  /news      [implemented]
+  /faculty   [next]
+  /gallery   [next]
+  /jobs      [next]
+  /alumni    [next]
+  /uploads   [implemented — Supabase Storage]
+```
+
+### Shared backend code (`api/_lib`)
+```
+db.js          Supabase Postgres client (postgres.js)
+auth.js        JWT sign/verify, requireAdmin, cookies
+storage.js     Supabase Storage client + uploadAsset() util
+validation.js  input validators (str, bool, date, intId)
+response.js    sendData / sendError / withErrors / ApiError / Err
+```
+
+### Future CMS modules (addable without architectural change)
+Dashboard · News · Faculty · Jobs · Gallery · Alumni · Admissions · Downloads ·
+Events · Settings. Each follows the same pattern: a `/api/<module>` resource
+(using `_lib`), an admin section under `/admin/<module>`, and a public page that
+reads the resource.
+
+### Quality bar
+Everything serverless and Vercel-compatible; business logic stays in the
+backend; consistent `{ data } / { error }` JSON; env vars for all secrets;
+clean, extendable, production-ready code.

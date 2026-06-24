@@ -41,5 +41,28 @@ export async function api(path, { method = "GET", body, signal } = {}) {
       e && e.detail
     );
   }
-  return data;
+  // Endpoints respond with { data: ... }; unwrap it for callers.
+  return data && Object.prototype.hasOwnProperty.call(data, "data") ? data.data : data;
+}
+
+/* Read a File as base64 (without the data: prefix). */
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1] || "");
+    reader.onerror = () => reject(new FriendlyError("That file couldn't be read. Please choose another.", "read_failed"));
+    reader.readAsDataURL(file);
+  });
+}
+
+/*
+ * Upload an image/document through our backend to Supabase Storage.
+ * Returns { url, path }. Throws FriendlyError on failure.
+ */
+export async function uploadFile(file, folder = "uploads") {
+  const dataBase64 = await fileToBase64(file);
+  return api("/uploads", {
+    method: "POST",
+    body: { filename: file.name, contentType: file.type, folder, dataBase64 },
+  });
 }

@@ -1,6 +1,7 @@
 import { sql } from "../_lib/db.js";
 import { requireAdmin } from "../_lib/auth.js";
-import { withErrors, ApiError, Err } from "../_lib/errors.js";
+import { withErrors, sendData, Err } from "../_lib/response.js";
+import { str, bool, date } from "../_lib/validation.js";
 
 export default withErrors(async (req, res) => {
   if (req.method === "GET") {
@@ -8,22 +9,26 @@ export default withErrors(async (req, res) => {
     if (req.query.all === "1") {
       await requireAdmin(req);
       const rows = await sql`select * from news order by date desc, id desc`;
-      return res.status(200).json(rows);
+      return sendData(res, rows);
     }
     const rows = await sql`select * from news where published = true order by date desc, id desc`;
-    return res.status(200).json(rows);
+    return sendData(res, rows);
   }
 
   if (req.method === "POST") {
     await requireAdmin(req);
-    const { title, category, body, date, image_url, published } = req.body || {};
-    if (!title || !title.trim()) throw Err.missing("a title");
+    const title = str(req.body, "title", { required: true, max: 300, label: "a title" });
+    const category = str(req.body, "category", { max: 80 });
+    const body = str(req.body, "body", { max: 20000 });
+    const day = date(req.body, "date", { fallbackToday: true });
+    const image_url = str(req.body, "image_url", { max: 1000 });
+    const published = bool(req.body, "published");
+
     const [row] = await sql`
       insert into news (title, category, body, date, image_url, published)
-      values (${title.trim()}, ${category || null}, ${body || null},
-              ${date || new Date().toISOString().slice(0, 10)}, ${image_url || null}, ${published ?? false})
+      values (${title}, ${category}, ${body}, ${day}, ${image_url}, ${published})
       returning *`;
-    return res.status(201).json(row);
+    return sendData(res, row, 201);
   }
 
   throw Err.badMethod();

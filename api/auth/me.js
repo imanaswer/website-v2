@@ -1,9 +1,9 @@
 import { getSession } from "../_lib/auth.js";
-import { withErrors } from "../_lib/errors.js";
+import { withErrors, sendData } from "../_lib/response.js";
 
 export default withErrors(async (req, res) => {
   const session = await getSession(req);
-  res.status(200).json({
+  sendData(res, {
     authenticated: !!session,
     user: session ? { username: session.sub } : null,
   });
