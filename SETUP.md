@@ -11,7 +11,7 @@ running.
 - Node 18+ and npm
 - A free [Supabase](https://supabase.com) project (Postgres)
 - A free [Vercel](https://vercel.com) account
-- Vercel CLI for local API dev: `npm i -g vercel`
+- (Optional) Vercel CLI — `npm run dev` already runs the API locally; `vercel dev` is an alternative
 
 ## 1. Create the database (Supabase)
 1. In your Supabase project → **SQL Editor**, paste `schema.sql` and run it to
@@ -52,13 +52,14 @@ empty. (Re-running replaces those rows.)
 
 ## Run locally
 ```bash
-vercel dev          # runs the SPA *and* the /api functions together
+npm run dev         # serves the SPA *and* the /api functions together
 ```
-Then open `http://localhost:3000` (or the port it prints) and the admin at
-`/admin/login`.
+Then open `http://localhost:5173` and the admin at `/admin/login`.
 
-> Note: plain `npm run dev` runs **only** the frontend — the `/api` endpoints
-> won't respond, so login/content needs `vercel dev`.
+> A dev-only Vite plugin (in `vite.config.js`) runs the `api/` functions during
+> `npm run dev`, so no Vercel CLI is needed locally. The admin login works with
+> just `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH` and `JWT_SECRET`; database and
+> upload features additionally need the Supabase vars. `vercel dev` also works.
 
 ## Deploy
 1. Push the repo to GitHub.

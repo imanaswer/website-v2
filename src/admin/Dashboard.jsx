@@ -16,7 +16,7 @@ export function Dashboard() {
     let active = true;
     api("/news?all=1")
       .then((rows) => active && setCount(Array.isArray(rows) ? rows.length : 0))
-      .catch((err) => active && setNotice({ type: "error", message: err.message, code: err.code, detail: err.detail }));
+      .catch((err) => { if (active) { setCount("—"); setNotice({ type: "error", message: err.message, code: err.code, detail: err.detail }); } });
     return () => { active = false; };
   }, []);
 
@@ -37,7 +37,7 @@ export function Dashboard() {
           <div>
             <div style={{ fontFamily: "var(--font-display)", fontSize: "1.3rem" }}>News &amp; Events</div>
             <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.9rem", color: "var(--text-muted)" }}>
-              {count == null ? "Loading…" : `${count} item${count === 1 ? "" : "s"}`}
+              {count == null ? "Loading…" : typeof count !== "number" ? "Unavailable" : `${count} item${count === 1 ? "" : "s"}`}
             </div>
           </div>
         </div>

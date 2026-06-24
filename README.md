@@ -31,8 +31,8 @@ non-technical admin always knows what happened and what to do.
 > The site runs locally with one command once the environment is configured
 > (see [Quick start](#-quick-start)). Use these demo admin credentials.
 
-**Public site:** `http://localhost:3000/`
-**Admin panel:** `http://localhost:3000/admin/login`
+**Public site:** `http://localhost:5173/`
+**Admin panel:** `http://localhost:5173/admin/login`
 
 | Field | Value |
 |-------|-------|
@@ -92,8 +92,8 @@ The matching `ADMIN_PASSWORD_HASH` for this demo password is already provided in
 
 ## 🚀 Quick start
 
-**Prerequisites:** Node 18+, a free [Supabase](https://supabase.com) project, and
-the [Vercel CLI](https://vercel.com/docs/cli) (`npm i -g vercel`) for local API.
+**Prerequisites:** Node 18+ and a free [Supabase](https://supabase.com) project.
+(The Vercel CLI is optional — `npm run dev` runs the API locally on its own.)
 
 ```bash
 # 1. Install
@@ -129,14 +129,17 @@ SUPABASE_STORAGE_BUCKET="media"
 # 5. Seed starting content (18 real faculty, news, gallery)
 npm run seed
 
-# 6. Run locally (frontend + API together)
-vercel dev
+# 6. Run locally — serves the frontend AND the /api functions together
+npm run dev
 ```
 
-Open the printed URL (usually `http://localhost:3000`). Admin: `/admin/login`.
+Open `http://localhost:5173`. Admin: `/admin/login`.
 
-> `npm run dev` runs **only** the frontend (fast UI work). The admin/login and
-> content need the API, so use `vercel dev`.
+> A dev-only Vite plugin runs the `api/` functions during `npm run dev`, so the
+> admin login and API work locally with **no Vercel CLI needed**. `vercel dev`
+> also works if you prefer. The **admin login works with just the `ADMIN_*` and
+> `JWT_SECRET` vars** — the database/storage features additionally need the
+> Supabase vars.
 
 Full step-by-step provisioning is in **[SETUP.md](./SETUP.md)**.
 
