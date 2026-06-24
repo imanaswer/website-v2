@@ -43,7 +43,7 @@ export function SiteFooter({ onNavigate }) {
           { label: "Apply Now",   to: "admissions" },
           { label: "Fees",        to: "admissions" },
           { label: "Affiliation", to: "about" },
-          { label: "Careers",     to: "contact" },
+          { label: "Careers",     to: "careers" },
         ])}
         {col("Contact", [
           { label: "0495 236 5215" },

@@ -9,6 +9,7 @@ import { FacultyPage } from "./pages/FacultyPage";
 import { AdmissionsPage } from "./pages/AdmissionsPage";
 import { GalleryPage } from "./pages/GalleryPage";
 import { AlumniPage } from "./pages/AlumniPage";
+import { CareersPage } from "./pages/CareersPage";
 import { ContactPage } from "./pages/ContactPage";
 
 const PAGES = {
@@ -19,6 +20,7 @@ const PAGES = {
   admissions: AdmissionsPage,
   gallery:    GalleryPage,
   alumni:     AlumniPage,
+  careers:    CareersPage,
   contact:    ContactPage,
 };
 

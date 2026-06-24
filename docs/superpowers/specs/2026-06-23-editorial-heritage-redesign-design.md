@@ -77,6 +77,12 @@ not a SaaS template).
 - **Wiring** — `faculty` and `alumni` added to `App.jsx` PAGES and the
   `SiteHeader` nav (now 8 items); Academics "Our Teachers" links to Faculty;
   footer "Explore" column updated.
+- **Careers** — new page to post vacancies. A data-driven `VACANCIES` array
+  (seeded with clearly-marked placeholder postings) renders an editorial
+  openings list; an empty array shows a graceful "no current openings" state.
+  Includes a "why teach here" section and an application route to Contact.
+  Kept out of the main nav (already 8 items) — reached via the footer "Careers"
+  link, now pointed at the `careers` page.
 
 ## Accessibility / quality floor (from ui-ux-pro-max)
 4.5:1 contrast, visible focus rings, alt text, `prefers-reduced-motion`, 44px touch
