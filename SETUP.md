@@ -1,21 +1,24 @@
 # Setup — Sri Gujarati Vidyalaya (full-stack)
 
-The site is a Vite React SPA with a Vercel Serverless API and a Neon Postgres
-database. An admin panel lives at **`/admin`**. This guide gets it running.
+The site is a Vite React SPA with a Vercel Serverless API and a Supabase
+Postgres database. An admin panel lives at **`/admin`**. This guide gets it
+running.
 
-> You only need to do steps 1–5 once. They require **your own** free Neon and
-> Vercel accounts — secrets are never committed to the repo.
+> You only need to do steps 1–5 once. They require **your own** free Supabase
+> and Vercel accounts — secrets are never committed to the repo.
 
 ## Prerequisites
 - Node 18+ and npm
-- A free [Neon](https://neon.tech) account (Postgres)
+- A free [Supabase](https://supabase.com) project (Postgres)
 - A free [Vercel](https://vercel.com) account
 - Vercel CLI for local API dev: `npm i -g vercel`
 
-## 1. Create the database (Neon)
-1. Create a Neon project. Copy its connection string → this is `DATABASE_URL`.
-2. Create the tables — paste `schema.sql` into the Neon **SQL Editor** and run,
-   or from a terminal: `psql "$DATABASE_URL" -f schema.sql`.
+## 1. Create the database (Supabase)
+1. In your Supabase project → **SQL Editor**, paste `schema.sql` and run it to
+   create the tables.
+2. → **Project Settings → Database → Connection string → "Connection pooling"**
+   (Transaction mode, port 6543). Copy it → this is `DATABASE_URL`. (The pooler
+   string is the right one for serverless functions.)
 
 ## 2. Generate the admin login + secrets
 ```bash

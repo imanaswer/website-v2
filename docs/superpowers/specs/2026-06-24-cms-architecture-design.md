@@ -11,8 +11,8 @@ errors throughout.
   `react-router-dom` (already a dependency) for real URLs — improves SEO, fixes
   deep-linking, and enables a protected `/admin` area.
 - **Backend:** Vercel Serverless Functions under `/api` (Node.js runtime).
-- **Database:** Neon Postgres (free tier), accessed with
-  `@neondatabase/serverless`.
+- **Database:** Supabase Postgres (free tier), accessed with `postgres.js` over
+  the Supabase connection pooler (Transaction mode).
 - **Auth:** single admin. Username + bcrypt password **hash stored in env vars**
   (no users table). Login issues a **JWT in an httpOnly cookie** (`jose`);
   admin endpoints verify it.
@@ -28,7 +28,7 @@ Vercel project
 ├── /api/* serverless functions (public GET; admin POST/PUT/DELETE via JWT)
 │     /api/auth/{login,logout,me}   /api/upload (Blob)
 │     /api/{news,faculty,jobs,alumni,gallery}[/:id]
-└── Neon Postgres  +  Vercel Blob (images)
+└── Supabase Postgres  +  Vercel Blob (images)
 ```
 
 ## Data model (Postgres)
@@ -92,6 +92,6 @@ faculty, news items, etc.) so nothing starts empty.
 - **Phase 5 — Deploy & migrate:** Vercel project, env vars, seed, go live.
 
 ## What the user must provision (cannot be automated here)
-A Neon database (free), a Vercel project, and the env-var secrets above
+A Supabase project (free), a Vercel project, and the env-var secrets above
 (including generating `ADMIN_PASSWORD_HASH` with the provided script and a
 `BLOB_READ_WRITE_TOKEN` from Vercel Blob). `SETUP.md` gives exact steps.

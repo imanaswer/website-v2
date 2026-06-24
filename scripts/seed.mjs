@@ -5,13 +5,13 @@
  *
  * This REPLACES existing rows in each table. Run it once after schema.sql.
  */
-import { neon } from "@neondatabase/serverless";
+import postgres from "postgres";
 
 if (!process.env.DATABASE_URL) {
   console.error("DATABASE_URL is not set. Example:\n  DATABASE_URL='postgres://...' node scripts/seed.mjs");
   process.exit(1);
 }
-const sql = neon(process.env.DATABASE_URL);
+const sql = postgres(process.env.DATABASE_URL, { ssl: "require", prepare: false });
 
 const F = "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/";
 const T = "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/";
@@ -77,9 +77,11 @@ async function run() {
   }
 
   console.log("Done. Faculty, news and gallery seeded. (jobs and alumni start empty.)");
+  await sql.end();
 }
 
-run().catch((e) => {
+run().catch(async (e) => {
   console.error("Seed failed:", e.message);
+  try { await sql.end(); } catch { /* ignore */ }
   process.exit(1);
 });
