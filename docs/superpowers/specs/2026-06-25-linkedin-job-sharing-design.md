@@ -1,172 +1,271 @@
-# Shareable Job Postings with LinkedIn — Design
+# Shareable Job Postings + Generic Metadata System — Design
 
 **Date:** 2026-06-25
-**Status:** Approved design, ready for implementation planning
+**Status:** Approved design (revised for a generic, reusable metadata system),
+ready for implementation planning
 
 ## Goal
 
-Let each careers vacancy be shared to LinkedIn (and other social platforms) as a
-distinct post with its own rich preview card. A recruiter or admin shares a
-job's link; LinkedIn shows that job's role, department, and an image — not a
-generic site card.
+Let each careers vacancy be shared to LinkedIn (and other platforms) as a
+distinct post with its own rich preview card and be eligible for Google's Jobs
+rich results. Build this as a **generic, reusable metadata/SEO system** — not a
+jobs-only solution — so News, Events, Faculty, and future content types can reuse
+the same infrastructure by adding a small resolver, a route, and a detail page.
+
+**Scope boundary:** Jobs is the first and only *fully wired* consumer in this
+phase. The metadata infrastructure is built generic; other content types' detail
+pages and routes are explicit follow-on work.
 
 ## Background & constraints
 
 The site is a Vite single-page app (client-rendered) deployed on Vercel, with
-serverless functions under `api/`. Key facts that shape the design:
+serverless functions under `api/`, a config-driven admin CMS
+(`src/admin/lib/resources.js`), Postgres via `postgres.js`, and Supabase Storage
+for uploads. Facts that shape the design:
 
 - **LinkedIn's link-preview crawler does not run JavaScript.** A purely
-  client-rendered route therefore yields no job-specific preview.
+  client-rendered route yields no entity-specific preview.
 - **LinkedIn's share dialog accepts only a `url` parameter**
-  (`https://www.linkedin.com/sharing/share-offsite/?url=<encoded>`). The
-  `title`/`summary` params were removed years ago, so the preview card is built
-  entirely from the Open Graph (OG) tags the crawler scrapes at that URL.
-- Jobs are dynamic (served from Postgres via the existing `jobs` resource), so
-  build-time prerendering is not viable — OG tags must be injected at request
-  time.
+  (`https://www.linkedin.com/sharing/share-offsite/?url=<encoded>`); the preview
+  card is built entirely from Open Graph tags scraped at that URL.
+- **Google's Jobs experience does not reliably read client-rendered JSON-LD** —
+  `JobPosting` structured data must be present in the server response.
+- Content is dynamic (served from Postgres), so OG/JSON-LD must be injected at
+  request time, not at build time.
 - `index.html` currently has **no** OG/Twitter tags.
-- There is currently **no individual job page**; the careers list renders jobs
-  inline and "Apply" routes to the contact page.
+- There is currently **no individual job page**; the careers list renders inline
+  and "Apply" routes to contact.
 
-The consequence: to produce distinct LinkedIn cards we must serve job-specific OG
-tags from the shared URL via a serverless function. This is "Approach B" from
-brainstorming. A client-only approach was rejected because every job would share
-an identical generic card, defeating the feature's purpose.
+## URL scheme: slug-id hybrid
 
-## Architecture
-
-### Canonical share URL: `/careers/:id`
-
-A single clean URL serves both audiences:
-
-- **Humans:** the URL boots the SPA; React Router renders a new job detail page.
-- **Crawlers:** a `vercel.json` rewrite maps `/careers/:id` (numeric id only) to
-  a serverless function that returns `index.html` with per-job OG tags injected
-  into `<head>`. Because the returned HTML still contains the SPA boot script,
-  any human who hits the function also gets a working app — one URL, no
-  user-agent sniffing, no redirect flash.
-
-The bare `/careers` list page is unaffected: the rewrite's numeric guard
-(`:id(\\d+)`) means non-numeric paths fall through to the existing SPA catch-all.
-
-### Data flow
+Public job URL:
 
 ```
-Share button  ──>  https://www.linkedin.com/sharing/share-offsite/?url=<origin>/careers/123
-                                                   │
-LinkedIn crawler fetches /careers/123 ────────────┘
-                                                   │
-        vercel.json: /careers/:id(\d+)  ─────────> api/share/job/[id].js
-                                                   │  fetch job from DB
-                                                   │  fetch own /index.html
-                                                   │  inject OG tags (injectOg)
-                                                   v
-                                          HTML with job-specific <head>
-
-Human opens /careers/123  ──> same function (or SPA) ──> SPA boots ──> JobDetailPage
-                                                          fetches /api/jobs/123
+/careers/software-engineer-123
 ```
 
-## Components / files
+- The **trailing numeric id is the authoritative lookup key** (rename-safe, no
+  slug column needed, no collision handling).
+- The slug is cosmetic, derived from `role` via `slugify(role)`.
+- The server and client both parse the trailing `-(\d+)` to get the id, then
+  fetch the job by id.
+- Both emit `<link rel="canonical">` and `og:url` using the **recomputed**
+  canonical slug, so a stale or hand-edited slug still resolves and points search
+  engines at the correct URL. No 301 redirect — the canonical tag is sufficient.
+- Bare `/careers` (the list) is unaffected: the rewrite requires a slug segment.
 
-### New
+## Architecture: a generic metadata system
 
-- **`api/_lib/og.js`** — pure helper `injectOg(html, tags)`: takes the
-  `index.html` string and a map of OG/Twitter values, returns HTML with the tags
-  inserted into `<head>`. All values HTML-escaped. Pure string-in/string-out so
-  it is trivially verifiable without a DB or network.
-- **`api/share/job/[id].js`** — serverless function:
-  1. Read `id` (numeric).
-  2. Fetch the job via the existing `sql` client / `jobs` table (published only).
-  3. Fetch the deployment's own `/index.html` (e.g. `https://<host>/index.html`)
-     so Vite's fingerprinted asset references stay intact.
-  4. Build the OG tag map and call `injectOg`.
-  5. Return the HTML with `Content-Type: text/html` and a short cache header.
-  - **Graceful fallback:** if the job is missing/unpublished or the DB is
-    unreachable, return the unmodified `index.html` (never a 5xx). The crawler
-    simply gets the generic card; the SPA still loads for humans.
-- **`src/pages/JobDetailPage.jsx`** — fetches one job from the existing
-  `/api/jobs/:id` endpoint and renders role, department, type, location,
-  closes-on, and description in the site's editorial style. Includes an **Apply**
-  action (→ contact page) and the share bar.
-- **`src/components/ShareBar.jsx`** — reusable share controls:
-  - "Share on LinkedIn" → opens
-    `https://www.linkedin.com/sharing/share-offsite/?url=<encoded canonical>` in
-    a new tab.
-  - "Copy link" → copies the canonical URL to the clipboard with brief
-    confirmation feedback.
-  - Built generic (takes a `url` and optional `title`) so it can later drop into
-    news or other pages.
+Three layers, with the pure logic shared isomorphically:
 
-### Changed
+### 1. `shared/meta/` — isomorphic, pure, side-effect-free
 
-- **`vercel.json`** — add `{ "source": "/careers/:id(\\d+)", "destination":
-  "/api/share/job/:id" }` **before** the existing catch-all rewrite.
-- **`index.html`** — add generic OG/Twitter fallback tags (`og:title`,
-  `og:description`, `og:image`, `og:type`, `og:url`, `twitter:card`). Improves
-  every shared page, not just jobs.
-- **`src/App.jsx`** — add a `/careers/:id` route rendering `JobDetailPage`.
-- **`src/pages/CareersPage.jsx`** — make each opening's role link to its
-  `/careers/:id` detail page (in addition to the existing Apply action).
+A new top-level `shared/` directory imported by **both** the serverless functions
+(`api/`) and the client bundle (`src/`). `@vercel/nft` traces it into the
+serverless bundle; Vite bundles it for the client; the dev plugin's dynamic
+`import()` handles it server-side in dev.
 
-## Open Graph tags per job
+Rules: **no postgres, no DOM, no `process`, no side effects**, and **explicit
+`.js` extensions** on internal imports (Node ESM requirement).
+
+Contents:
+- `slugify(text)` and `truncate(text, max)` (word-boundary, ~160–200 chars, no
+  mid-word cut, ellipsis).
+- The canonical **meta shape**:
+  `{ title, description, image, imageWidth, imageHeight, url, canonical, robots, type, jsonLd }`.
+- `tagsFromMeta(meta)` → serializes a meta object into the list of `<head>` tag
+  strings (OG, Twitter, canonical link, robots, JSON-LD script). Single source of
+  truth for serialization, HTML-escaped.
+- Per-type resolvers (thin): `resolveJobMeta(row, { origin })` builds the meta
+  object for a job. Other types add `resolveNewsMeta`, etc., later. Resolvers are
+  kept deliberately thin — no premature abstraction while jobs is the only one.
+- `buildJobPostingJsonLd(row, { origin })` → the `JobPosting` JSON-LD object (see
+  guards below).
+
+### 2. Server — generic metadata endpoint + injection
+
+- **`api/_lib/render-meta.js`**: `injectMeta(html, meta)` — inserts
+  `tagsFromMeta(meta)` into the `<head>` of an HTML string. Pure string transform.
+- **`api/meta.js`** (or `api/meta/index.js`): one generic endpoint for all types.
+  1. Read `type` and `slug` from the query (provided by the rewrite).
+  2. Look up the resolver + table config for `type`; parse the trailing id.
+  3. Fetch the row (published only) via the existing `sql` client.
+  4. Fetch the deployment's own `/index.html` (`https://<host>/index.html`) so
+     Vite's fingerprinted asset references stay intact.
+  5. `injectMeta(html, resolver(row, { origin }))`.
+  6. Respond `text/html` with cache headers (below).
+  - **Graceful fallback:** row missing/unpublished, unknown type, or DB error →
+    return the **unmodified** `index.html`. Never a 5xx.
+
+### 3. Client — `useDocumentMeta` hook
+
+- **`src/lib/useDocumentMeta.js`**: imperatively manages `document.title` (and the
+  `<link rel="canonical">`) for client-side navigations, cleaning up on unmount.
+- **The server already owns OG + JSON-LD for every crawler.** To avoid duplicating
+  the server-injected tags after the SPA boots, the client hook manages **only
+  `document.title` and canonical** — it does not re-emit OG/JSON-LD. (Decision
+  recorded explicitly to prevent double tags.)
+
+### Routing (`vercel.json`)
+
+Add, **before** the existing catch-all:
+
+```json
+{ "source": "/careers/:slug", "destination": "/api/meta?type=jobs&slug=:slug" }
+```
+
+Future types add one line each (`/news/:slug` → `type=news`, etc.). Because
+`/careers/:slug` now routes *any* single segment to the function, the fallback
+path must be cheap and robust — which it is (see caching).
+
+## Data model change: optional per-job OG image
+
+Add an optional `og_image` column to `jobs`:
+
+- **`schema.sql`**: add `og_image text` to the `create table jobs` block (for
+  fresh installs).
+- **Live migration (required deploy step):** `create table if not exists` is
+  skipped on the existing Supabase DB, so the column will **not** be added by
+  editing the create block. Run against the live DB:
+  ```sql
+  alter table jobs add column if not exists og_image text;
+  ```
+- **`api/_lib/schemas.js`** → `jobs.parse`: add
+  `og_image: str(b, "og_image", { max: 1000 })`.
+- **`src/admin/lib/resources.js`** → jobs `fields`: add
+  `{ name: "og_image", label: "Share image", type: "image", folder: "jobs", help: "Optional. Shown when the job is shared on LinkedIn/Google. Falls back to the default careers image." }`
+  and add `og_image: ""` to its `defaults()`.
+
+**Image resolution order:** per-job `og_image` (absolute Supabase URL) → default
+careers image.
+
+## Per-job metadata (the `jobs` resolver)
+
+### Open Graph / Twitter
 
 | Tag | Value |
 | --- | --- |
 | `og:title` | `{role} — Sri Gujarati Vidyalaya` |
-| `og:description` | job `description`, trimmed; fallback to `{department} · {type} · {location}` |
-| `og:url` | the canonical `/careers/:id` URL |
+| `og:description` | see priority below |
+| `og:url` | canonical `/careers/{slug}-{id}` |
 | `og:type` | `website` |
-| `og:image` | a single default careers image (see below) |
+| `og:image` | `og_image` if set, else the default careers image |
+| `og:image:width` / `:height` | dimensions of the chosen image |
 | `twitter:card` | `summary_large_image` |
 
-**OG image:** jobs have no image column. To keep scope tight we use one default
-careers image for all jobs (distinctiveness comes from title + description,
-which is what matters most on a feed). A per-job image field is explicitly out of
-scope and can be added later. The image must be an absolute, stable, publicly
-reachable URL.
+**OG description priority:**
+1. Explicit SEO description field (not added now; resolver checks for it so a
+   future `seo_description` column needs only a parse + admin field).
+2. Job `description`, truncated to ~160–200 chars on a word boundary.
+3. `Department • {Type} • {Location}` (present fields only).
+4. Site-wide careers description (a constant).
+
+### Canonical & robots
+
+- `<link rel="canonical" href="{canonical}">` on every job page.
+- `robots`: published jobs → `index,follow`. The server serves published jobs
+  only; the client "no longer available" state sets `noindex,follow`.
+
+### JSON-LD `JobPosting` (server-injected, guarded)
+
+Emit **only** when all of `title`, `description`, `datePosted` (`created_at`),
+`hiringOrganization`, and `jobLocation` are present, **and** `closes_on` is not in
+the past (a past `validThrough` causes Google to drop/flag the posting). Otherwise
+omit JSON-LD entirely to avoid Search Console errors.
+
+Field mapping:
+- `title` ← `role`
+- `description` ← job description (fallback text if structurally required)
+- `datePosted` ← `created_at`
+- `validThrough` ← `closes_on` (only if present and future)
+- `employmentType` ← mapped to Google's enum:
+  `Full-time→FULL_TIME`, `Part-time→PART_TIME`, `Contract→CONTRACTOR`,
+  `Temporary→TEMPORARY`
+- `hiringOrganization` ← `{ @type: Organization, name, sameAs: site origin, logo }`
+- `jobLocation` ← `{ @type: Place, address: { @type: PostalAddress,
+  addressLocality: "Kozhikode", addressRegion: "Kerala", addressCountry: "IN",
+  streetAddress: location } }`
+- `identifier` ← `{ @type: PropertyValue, name: org, value: id }`
+
+## Caching (crawler responses)
+
+- **Successful job response:** `Cache-Control: public, s-maxage=300,
+  stale-while-revalidate=600` — edits propagate within minutes; SWR avoids
+  latency.
+- **Fallback response (not found / DB error / unknown type):** `no-store` (or a
+  few seconds), so a transient blip never pins a *generic* card onto a real job's
+  URL for the full `s-maxage`.
+
+## Client components / pages
+
+- **`src/components/ShareBar.jsx`** (new, reusable): "Share on LinkedIn" (opens
+  `share-offsite?url=<encoded canonical>`) and "Copy link" (clipboard + brief
+  confirmation). Takes a `url`; reusable on future detail pages.
+- **`src/pages/JobDetailPage.jsx`** (new): fetches one job from the existing
+  `/api/jobs/:id` (id parsed from the slug), renders role/department/type/
+  location/closes/description in the editorial style, an **Apply** action
+  (→ contact), and the share bar; drives `useDocumentMeta` for title/canonical;
+  shows the "no longer available" state on 404/error (with `noindex`).
+- **`src/App.jsx`**: add route `/careers/:slug` → `JobDetailPage`.
+- **`src/pages/CareersPage.jsx`**: each opening's role links to its
+  `/careers/{slug}-{id}` detail page (Apply action retained).
+
+## `index.html` generic fallbacks
+
+Add generic OG/Twitter tags (`og:title`, `og:description`, `og:image` [absolute],
+`og:image:width`/`height`, `og:type`, `og:url`, `twitter:card`) — improves every
+shared page that isn't entity-specific.
+
+**Default OG image:** must be **absolute** and meet LinkedIn's large-card minimum
+(~1200×627; the crest at ~84 KB / small dimensions is too small). Provide a
+properly sized careers/campus image and declare its width/height.
 
 ## Error handling & edge cases
 
-- **Serverless:** job missing/unpublished or DB error → serve unmodified
-  `index.html`. Never return 5xx to a crawler or human.
-- **Client detail page:** 404/error from `/api/jobs/:id` → show "This opening is
-  no longer available" with a link back to Careers (mirrors the existing
-  fallback-friendly `useApi` philosophy that keeps the public site from ever
-  looking broken).
-- **Non-numeric `/careers/abc`:** the `\\d+` guard means it falls through to the
-  SPA catch-all → home (existing `*` route behavior).
-- **Unpublished jobs:** the share function fetches published rows only, so a
-  shared link to an unpublished/closed job degrades to the generic card and the
-  detail page shows the not-available state.
+- **Serverless:** missing/unpublished row, unknown type, or DB error → unmodified
+  `index.html` (never 5xx), with `no-store`.
+- **Client detail page:** 404/error → "This opening is no longer available" + link
+  back to Careers, `noindex` (mirrors the fallback-friendly `useApi` philosophy).
+- **Stale/mismatched slug:** id still resolves; canonical points at the correct
+  slug.
+- **`/careers/<not-a-job>`:** function fetches nothing → generic fallback HTML;
+  the SPA boots and routes accordingly.
 
 ## Local dev note
 
-The Vite dev plugin (`vite.config.js`) only intercepts `/api/*`; it does not
-process `vercel.json` rewrites. So in `npm run dev`, hitting `/careers/123`
-renders the SPA directly (no OG injection) — which is fine, since OG injection
-only matters for crawlers in production. To inspect injected tags locally, hit
-`/api/share/job/123` directly.
+The Vite dev plugin only intercepts `/api/*` and does not process `vercel.json`
+rewrites, so in `npm run dev`, `/careers/<slug>` renders the SPA directly (no OG
+injection) — fine, since injection only matters for crawlers in production. To
+inspect injected tags locally, request `/api/meta?type=jobs&slug=<slug>-<id>`.
 
 ## Testing / verification
 
-This repo has no test runner. Verification plan:
+No test runner exists in this repo. Plan:
+1. **Pure helpers** (`slugify`, `truncate`, `tagsFromMeta`, `buildJobPostingJsonLd`,
+   `injectMeta`) are pure string-in/string-out — structured to be the natural
+   first unit tests if a runner is added.
+2. **Local manual** — request `/api/meta?type=jobs&slug=…` and confirm per-job
+   OG + JSON-LD tags and intact SPA asset refs.
+3. **Post-deploy (required, not possible on localhost):**
+   - LinkedIn Post Inspector (`linkedin.com/post-inspector`) on the live
+     `/careers/{slug}-{id}` URL → rich card renders.
+   - Google Rich Results Test on the same URL → `JobPosting` validates with no
+     errors.
 
-1. **`injectOg` correctness** — structured as a pure function so its output
-   (tags present, values escaped, original asset refs intact) is easy to check;
-   if/when a test runner is added it is the natural first unit test.
-2. **Local manual check** — request `/api/share/job/<id>` and confirm the
-   returned HTML contains the expected per-job OG tags and still references the
-   built SPA assets.
-3. **Post-deploy confirmation (required, cannot be done on localhost)** — after
-   deployment, run the live `/careers/:id` URL through LinkedIn's Post Inspector
-   (linkedin.com/post-inspector) to confirm the rich card renders. This is the
-   true acceptance check and happens after deploy, not in-session.
+## Out of scope (YAGNI / follow-on)
 
-## Out of scope (YAGNI)
-
-- Auto-posting openings to LinkedIn via the Community Management API (deferred;
-  requires a verified company page, a LinkedIn developer app, app review, and
-  OAuth token storage — external approval gates).
-- Per-job OG images / an image field on the `jobs` schema.
+- Detail pages and routes for News/Events/Faculty (infrastructure is built generic
+  this phase; wiring each type is follow-on: add a resolver + a `vercel.json` line
+  + a detail page).
+- Auto-posting to LinkedIn via the Community Management API (external approval
+  gates).
+- An explicit `seo_description` column (resolver leaves a slot for it).
 - "Apply via LinkedIn" external application URLs.
+
+## Required deploy steps (not auto-applied)
+
+1. Run `alter table jobs add column if not exists og_image text;` against the
+   live Supabase DB.
+2. Provide a properly sized (~1200×627), absolute default OG image asset.
+3. After deploy, validate via LinkedIn Post Inspector and Google Rich Results
+   Test.
