@@ -76,11 +76,39 @@ Contents:
 - `tagsFromMeta(meta)` → serializes a meta object into the list of `<head>` tag
   strings (OG, Twitter, canonical link, robots, JSON-LD script). Single source of
   truth for serialization, HTML-escaped.
-- Per-type resolvers (thin): `resolveJobMeta(row, { origin })` builds the meta
-  object for a job. Other types add `resolveNewsMeta`, etc., later. Resolvers are
-  kept deliberately thin — no premature abstraction while jobs is the only one.
-- `buildJobPostingJsonLd(row, { origin })` → the `JobPosting` JSON-LD object (see
-  guards below).
+
+**Entity-agnostic dispatch (required).** Metadata is resolved through a single
+generic entry point backed by a registry — never a per-type function name like
+`getJobMetadata`:
+
+```
+resolveMetadata(type, entity, ctx) -> meta object
+```
+
+- `META_RESOLVERS` is a registry keyed by `type` (`{ jobs: jobResolver, … }`).
+  `resolveMetadata` looks up the resolver, calls it, and returns the canonical
+  meta shape. Unknown `type` → `null` (caller falls back to generic tags).
+- Each resolver also declares its **canonical path builder**
+  (`(entity) => '/careers/' + slugify(entity.role) + '-' + entity.id`) and its
+  **table/lookup config**, so the server endpoint stays fully generic and a new
+  type plugs in by adding one registry entry.
+- This phase populates **only** the `jobs` entry. The dispatch layer and registry
+  exist now (cheap, enables plug-in); no speculative resolvers are written for
+  types we are not building.
+
+**Modular JSON-LD (required).** JSON-LD generation is a separate registry of
+schema-type builders so `Article`, `Event`, `Organization`, `Person`, etc. can be
+added cleanly later:
+
+```
+buildJsonLd(schemaType, entity, ctx) -> JSON-LD object | null
+```
+
+- `JSONLD_BUILDERS` keyed by schema.org type (`{ JobPosting: …, Organization: … }`).
+- A resolver requests JSON-LD by schema type; the meta object carries the result
+  in its `jsonLd` field. This phase implements the `JobPosting` builder (and a
+  reusable `hiringOrganization`/`Organization` fragment); other builders are
+  follow-on.
 
 ### 2. Server — generic metadata endpoint + injection
 
@@ -88,11 +116,13 @@ Contents:
   `tagsFromMeta(meta)` into the `<head>` of an HTML string. Pure string transform.
 - **`api/meta.js`** (or `api/meta/index.js`): one generic endpoint for all types.
   1. Read `type` and `slug` from the query (provided by the rewrite).
-  2. Look up the resolver + table config for `type`; parse the trailing id.
+  2. Look up the registry entry (resolver + table/lookup config) for `type`; if
+     none, fall back. Parse the trailing id from `slug`.
   3. Fetch the row (published only) via the existing `sql` client.
   4. Fetch the deployment's own `/index.html` (`https://<host>/index.html`) so
      Vite's fingerprinted asset references stay intact.
-  5. `injectMeta(html, resolver(row, { origin }))`.
+  5. `injectMeta(html, resolveMetadata(type, row, { origin }))` — the endpoint is
+     entity-agnostic; it never references jobs directly.
   6. Respond `text/html` with cache headers (below).
   - **Graceful fallback:** row missing/unpublished, unknown type, or DB error →
     return the **unmodified** `index.html`. Never a 5xx.
@@ -122,14 +152,18 @@ path must be cheap and robust — which it is (see caching).
 
 Add an optional `og_image` column to `jobs`:
 
-- **`schema.sql`**: add `og_image text` to the `create table jobs` block (for
-  fresh installs).
-- **Live migration (required deploy step):** `create table if not exists` is
-  skipped on the existing Supabase DB, so the column will **not** be added by
-  editing the create block. Run against the live DB:
+- **Versioned migrations (new convention — required).** All schema changes are
+  now managed through ordered, versioned migration files so the live DB is
+  reproducible from migrations rather than ad-hoc SQL. See "Migrations" below. The
+  `og_image` change ships as a migration file:
   ```sql
+  -- migrations/0002_jobs_og_image.sql
   alter table jobs add column if not exists og_image text;
   ```
+- **`schema.sql`**: also add `og_image text` to the `create table jobs` block so
+  the reference snapshot stays current (note: `create table if not exists` is
+  skipped on the existing DB, which is exactly why the migration above is the
+  thing that actually applies the column live).
 - **`api/_lib/schemas.js`** → `jobs.parse`: add
   `og_image: str(b, "og_image", { max: 1000 })`.
 - **`src/admin/lib/resources.js`** → jobs `fields`: add
@@ -138,6 +172,26 @@ Add an optional `og_image` column to `jobs`:
 
 **Image resolution order:** per-job `og_image` (absolute Supabase URL) → default
 careers image.
+
+## Migrations (new convention)
+
+The DB must be reproducible from versioned migrations; no more relying on ad-hoc
+manual SQL.
+
+- **`migrations/` directory** with ordered, immutable, append-only files:
+  `NNNN_description.sql` (e.g. `0001_baseline.sql`, `0002_jobs_og_image.sql`).
+- **`migrations/0001_baseline.sql`** captures the current full schema (the
+  existing `schema.sql` content) so a fresh DB is built entirely from migrations.
+  `schema.sql` is retained as a human-readable reference snapshot, kept in sync,
+  but migrations are the source of truth.
+- **Tracking:** a `schema_migrations` table records applied filenames; the runner
+  applies only pending files in lexical order, each in a transaction.
+- **`scripts/migrate.mjs` + `npm run migrate`**: reuses the existing `postgres.js`
+  `DATABASE_URL` setup (consistent with `scripts/seed.mjs`). Idempotent — safe to
+  re-run.
+- This phase ships the runner, the `0001_baseline.sql`, and
+  `0002_jobs_og_image.sql`. Future schema changes add a new numbered file — never
+  edit an applied one.
 
 ## Per-job metadata (the `jobs` resolver)
 
@@ -168,7 +222,10 @@ careers image.
 
 ### JSON-LD `JobPosting` (server-injected, guarded)
 
-Emit **only** when all of `title`, `description`, `datePosted` (`created_at`),
+Produced by the modular `JobPosting` builder in `JSONLD_BUILDERS` (see
+"Modular JSON-LD"), reusing the shared `Organization` fragment for
+`hiringOrganization`. Emit **only** when all of `title`, `description`,
+`datePosted` (`created_at`),
 `hiringOrganization`, and `jobLocation` are present, **and** `closes_on` is not in
 the past (a past `validThrough` causes Google to drop/flag the posting). Otherwise
 omit JSON-LD entirely to avoid Search Console errors.
@@ -216,9 +273,9 @@ Add generic OG/Twitter tags (`og:title`, `og:description`, `og:image` [absolute]
 `og:image:width`/`height`, `og:type`, `og:url`, `twitter:card`) — improves every
 shared page that isn't entity-specific.
 
-**Default OG image:** must be **absolute** and meet LinkedIn's large-card minimum
-(~1200×627; the crest at ~84 KB / small dimensions is too small). Provide a
-properly sized careers/campus image and declare its width/height.
+**Default OG image:** a dedicated **1200×627 branded Careers OG image** (not the
+logo/crest), **absolute** URL, with declared width/height. Must read well across
+LinkedIn, Facebook, X (Twitter), Discord, Slack, and WhatsApp.
 
 ## Error handling & edge cases
 
@@ -264,8 +321,10 @@ No test runner exists in this repo. Plan:
 
 ## Required deploy steps (not auto-applied)
 
-1. Run `alter table jobs add column if not exists og_image text;` against the
-   live Supabase DB.
-2. Provide a properly sized (~1200×627), absolute default OG image asset.
+1. Run `npm run migrate` against the live Supabase DB (applies
+   `0002_jobs_og_image.sql`; `0001_baseline.sql` is already-satisfied and tracked
+   as applied).
+2. Provide the dedicated 1200×627 branded Careers OG image (absolute URL) — must
+   read well on LinkedIn, Facebook, X, Discord, Slack, and WhatsApp.
 3. After deploy, validate via LinkedIn Post Inspector and Google Rich Results
    Test.
