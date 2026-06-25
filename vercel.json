@@ -1,3 +1,6 @@
 {
-  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/careers/:slug", "destination": "/api/meta?type=jobs&slug=:slug" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
 }
