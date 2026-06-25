@@ -29,6 +29,7 @@ create table if not exists jobs (
   location    text,
   closes_on   date,
   description text,
+  og_image    text,
   published   boolean not null default true,
   created_at  timestamptz not null default now()
 );
