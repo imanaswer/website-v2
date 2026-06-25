@@ -3,6 +3,7 @@ import { Reveal } from "../components/Reveal";
 import { PageHero } from "../components/PageHero";
 import { TextLink, Label } from "../components/Ed";
 import { useApi } from "../lib/useApi";
+import { slugify } from "../../shared/meta/index.js";
 
 const HERO = "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/Faculty_.jpg";
 
@@ -83,13 +84,16 @@ function Openings({ onNavigate }) {
           </Reveal>
         ) : (
           <div className="index-list">
-            {vacancies.map((v, i) => (
-              <Reveal key={i} delay={i * 60}>
+            {vacancies.map((v) => {
+              const to = `/careers/${slugify(v.role)}-${v.id}`;
+              return (
+              <Reveal key={v.id} delay={0}>
                 <div
+                  onClick={() => onNavigate(to)}
                   onMouseEnter={(e) => { e.currentTarget.querySelector(".ed-role").style.color = "var(--maroon-800)"; }}
                   onMouseLeave={(e) => { e.currentTarget.querySelector(".ed-role").style.color = "var(--text-primary)"; }}
                   className="index-row ed-index-row"
-                  style={{ display: "grid", gridTemplateColumns: "6fr 4fr auto", gap: "clamp(1rem,3vw,2.4rem)", padding: "clamp(1.6rem,2.8vw,2.4rem) 0", alignItems: "center" }}
+                  style={{ cursor: "pointer", display: "grid", gridTemplateColumns: "6fr 4fr auto", gap: "clamp(1rem,3vw,2.4rem)", padding: "clamp(1.6rem,2.8vw,2.4rem) 0", alignItems: "center" }}
                 >
                   <div>
                     <h3 className="ed-role" style={{ fontSize: "clamp(1.4rem,1.1rem + 1vw,2rem)", fontWeight: 400, transition: "color var(--dur)" }}>{v.role}</h3>
@@ -99,10 +103,11 @@ function Openings({ onNavigate }) {
                     <span style={{ fontFamily: "var(--font-sans)", fontSize: "1.05rem", color: "var(--text-secondary)" }}>{[v.type, v.location].filter(Boolean).join(" · ")}</span>
                     {fmtDate(v.closes_on) && <span className="label" style={{ color: "var(--text-muted)" }}>Closes {fmtDate(v.closes_on)}</span>}
                   </div>
-                  <TextLink onClick={() => onNavigate("contact")}>Apply</TextLink>
+                  <TextLink onClick={(e) => { e.stopPropagation(); onNavigate(to); }}>View role</TextLink>
                 </div>
               </Reveal>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

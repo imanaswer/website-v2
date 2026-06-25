@@ -11,6 +11,7 @@ import { AdmissionsPage } from "./pages/AdmissionsPage";
 import { GalleryPage } from "./pages/GalleryPage";
 import { AlumniPage } from "./pages/AlumniPage";
 import { CareersPage } from "./pages/CareersPage";
+import { JobDetailPage } from "./pages/JobDetailPage";
 import { ContactPage } from "./pages/ContactPage";
 import { AdminApp } from "./admin/AdminApp.jsx";
 
@@ -26,9 +27,9 @@ const PATH_TO_ID = Object.fromEntries(Object.entries(ID_TO_PATH).map(([id, p]) =
 function PublicSite() {
   const navigate = useNavigate();
   const location = useLocation();
-  const current = PATH_TO_ID[location.pathname] || "home";
+  const current = PATH_TO_ID[location.pathname] || (location.pathname.startsWith("/careers") ? "careers" : "home");
 
-  const onNavigate = (id) => navigate(ID_TO_PATH[id] || "/");
+  const onNavigate = (id) => navigate(typeof id === "string" && id.startsWith("/") ? id : ID_TO_PATH[id] || "/");
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: "auto" }); }, [location.pathname]);
 
@@ -45,6 +46,7 @@ function PublicSite() {
           <Route path="/campus" element={<GalleryPage onNavigate={onNavigate} />} />
           <Route path="/alumni" element={<AlumniPage onNavigate={onNavigate} />} />
           <Route path="/careers" element={<CareersPage onNavigate={onNavigate} />} />
+          <Route path="/careers/:slug" element={<JobDetailPage onNavigate={onNavigate} />} />
           <Route path="/contact" element={<ContactPage onNavigate={onNavigate} />} />
           <Route path="*" element={<HomePage onNavigate={onNavigate} />} />
         </Routes>
