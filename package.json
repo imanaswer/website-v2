@@ -9,7 +9,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "seed": "node scripts/seed.mjs",
-    "hash": "node scripts/hash-password.mjs"
+    "hash": "node scripts/hash-password.mjs",
+    "test": "node --test",
+    "migrate": "node scripts/migrate.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",
