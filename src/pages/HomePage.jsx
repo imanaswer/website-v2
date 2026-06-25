@@ -29,6 +29,11 @@ const IMG = {
   news_ocean:"https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/3-18-555x472.jpg",
 };
 
+/* Background loop for the hero. Drop the file at public/hero.mp4 — it's served
+ * at the site root. Until then (or if it fails to load / autoplay is blocked),
+ * the campus image below acts as the poster and the hero still looks right. */
+const HERO_VIDEO = "/hero.mp4";
+
 /* A small inline text link that animates its arrow + underline. */
 function TextLink({ children, onClick, onDark }) {
   return (
@@ -44,7 +49,18 @@ function Hero({ onNavigate }) {
   return (
     <section style={{ position: "relative", minHeight: "min(94vh,880px)", display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden", background: "var(--maroon-950)" }}>
       <div className="hero-bg photo" style={{ position: "absolute", inset: 0 }}>
-        <Img src={IMG.campus} alt="The Sri Gujarati Vidyalaya campus at Mananchira, Kozhikode" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster={IMG.campus}
+          aria-hidden="true"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+        >
+          <source src={HERO_VIDEO} type="video/mp4" />
+        </video>
       </div>
       {/* refined, restrained gradient — readable but not muddy */}
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(36,16,6,.42) 0%,rgba(36,16,6,.08) 38%,rgba(36,16,6,.55) 78%,rgba(26,11,4,.86) 100%)" }} />
