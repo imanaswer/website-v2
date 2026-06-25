@@ -50,9 +50,10 @@ export const RESOURCES = [
       { name: "location", label: "Location", type: "text", half: true, placeholder: "Mananchira, Kozhikode" },
       { name: "closes_on", label: "Closing date", type: "date", half: true },
       { name: "description", label: "Description", type: "textarea", placeholder: "Role details, qualifications, how to apply…" },
+      { name: "og_image", label: "Share image", type: "image", folder: "jobs", help: "Optional. Shown when this job is shared on LinkedIn/Google. Falls back to the default careers image." },
       { name: "published", label: "Published", type: "checkbox", help: "When on, this appears on the Careers page." },
     ],
-    defaults: () => ({ role: "", department: "", type: "Full-time", location: "Mananchira, Kozhikode", closes_on: "", description: "", published: true }),
+    defaults: () => ({ role: "", department: "", type: "Full-time", location: "Mananchira, Kozhikode", closes_on: "", description: "", og_image: "", published: true }),
   },
   {
     key: "alumni", path: "alumni", label: "Alumni", icon: "users-three",

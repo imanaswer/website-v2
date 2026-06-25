@@ -44,6 +44,7 @@ export const jobs = {
     location: str(b, "location", { max: 160 }),
     closes_on: date(b, "closes_on"),
     description: str(b, "description", { max: 20000 }),
+    og_image: str(b, "og_image", { max: 1000 }),
     published: bool(b, "published", true),
   }),
 };
