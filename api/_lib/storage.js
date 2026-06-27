@@ -50,10 +50,20 @@ export async function uploadAsset({ folder = "uploads", filename, contentType, b
 
   const { error } = await client().storage.from(BUCKET).upload(path, buffer, { contentType, upsert: false });
   if (error) {
-    if (/bucket/i.test(error.message)) {
-      throw new ApiError(500, "bucket_missing", `The storage bucket "${BUCKET}" doesn't exist yet. Please create it in Supabase.`, error.message);
+    const msg = error.message || "";
+    if (/bucket/i.test(msg) && /not.*found|exist/i.test(msg)) {
+      throw new ApiError(500, "bucket_missing", `The storage bucket "${BUCKET}" doesn't exist yet. Please create it in Supabase.`, msg);
     }
-    throw new ApiError(502, "upload_failed", "The file couldn't be uploaded right now. Please try again in a moment.", error.message);
+    if (/invalid|jwt|signature|unauthor|api key|401|403/i.test(msg)) {
+      throw new ApiError(500, "storage_auth_failed", "File uploads aren't authorised — the Supabase service-role key looks wrong or expired. Please check it in your hosting settings.", msg);
+    }
+    if (/mime|content.?type|not.*allowed/i.test(msg)) {
+      throw new ApiError(415, "bucket_type_blocked", `The "${BUCKET}" bucket is rejecting this file type. Allow JPG, PNG, WebP and PDF on the bucket in Supabase.`, msg);
+    }
+    if (/exceed|maximum.*size|too large|payload/i.test(msg)) {
+      throw new ApiError(413, "bucket_size_limit", `The "${BUCKET}" bucket has a smaller file-size limit than this file. Raise the bucket's limit in Supabase.`, msg);
+    }
+    throw new ApiError(502, "upload_failed", "The file couldn't be uploaded right now. Please try again in a moment.", msg);
   }
 
   const { data } = client().storage.from(BUCKET).getPublicUrl(path);

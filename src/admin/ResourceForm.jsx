@@ -66,7 +66,7 @@ export function ResourceForm({ resource }) {
       set(field.name, url);
       setNotice({ type: "success", message: "Photo uploaded." });
     } catch (err) {
-      setNotice({ type: "error", message: err?.message || "The photo couldn't be uploaded. Please try again.", code: err?.code || "upload_failed" });
+      setNotice({ type: "error", message: err?.message || "The photo couldn't be uploaded. Please try again.", code: err?.code || "upload_failed", detail: err?.detail });
     } finally {
       setUploadingField(null);
     }
