@@ -37,13 +37,13 @@ non-technical admin always knows what happened and what to do.
 | Field | Value |
 |-------|-------|
 | **Username** | `admin` |
-| **Password** | `SGV@admin2026` |
+| **Password** | _set your own — see [Quick start](#-quick-start)_ |
 
-The matching `ADMIN_PASSWORD_HASH` for this demo password is already provided in
-[Quick start](#-quick-start), so login works as soon as the env vars are set.
+Set `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH`, and `JWT_SECRET` in `.env.local`
+(see [Quick start](#-quick-start)); login works as soon as the env vars are set.
 
-> ⚠️ **Change these before going live.** Generate a new password hash with
-> `npm run hash 'your-real-password'` and update `ADMIN_PASSWORD_HASH`.
+> ⚠️ **Never commit real credentials.** Generate a password hash with
+> `npm run hash 'your-password'` and put the result in `ADMIN_PASSWORD_HASH`.
 
 **What to show the client in the admin:**
 1. Sign in at `/admin/login`.
@@ -103,15 +103,15 @@ npm install
 cp .env.example .env.local
 ```
 
-Fill `.env.local` (the demo admin values are filled in for you):
+Fill `.env.local`:
 
 ```ini
 # Supabase Postgres — "Connection pooling" string (Transaction mode, port 6543)
 DATABASE_URL="postgresql://postgres.PROJECT:PASSWORD@aws-0-REGION.pooler.supabase.com:6543/postgres"
 
-# Admin login (demo password is: SGV@admin2026)
+# Admin login — generate the hash with:  npm run hash 'your-password'
 ADMIN_USERNAME="admin"
-ADMIN_PASSWORD_HASH="$2b$10$0/QnVdOf0jpGurUv2Xk9Xu0rUtKt3I16SmDYLNveY9pnGhWluf.Km"
+ADMIN_PASSWORD_HASH="$2a$10$replace-with-the-generated-hash"
 JWT_SECRET="paste-a-long-random-string-here"
 
 # Supabase Storage (server-only key — never exposed to the browser)
@@ -166,7 +166,8 @@ api/                     Vercel serverless functions (backend)
     validation.js        input validators
     response.js          consistent JSON + friendly errors
   auth/                  login · logout · me
-  news/                  news CRUD  (index.js, [id].js)
+  news/                  news CRUD  (one index.js: list + item; /:id via rewrite)
+  faculty/ jobs/ gallery/ alumni/   same CRUD pattern, one fn each
   uploads/               file upload → Supabase Storage
 src/
   pages/                 public editorial pages

@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/careers/:slug", "destination": "/api/meta?type=jobs&slug=:slug" },
+    { "source": "/api/:resource(news|faculty|jobs|gallery|alumni)/:id", "destination": "/api/:resource?id=:id" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

@@ -39,6 +39,24 @@ export function collection(config) {
   };
 }
 
+/*
+ * One handler per resource (`index.js`): dispatches to `collection` for
+ * `/resource` and to `item` for `/resource/:id`. The `:id` arrives as the
+ * `id` query param — directly in dev, and via a vercel.json rewrite in
+ * production. Normalised to a scalar in case a routing layer passes an array.
+ */
+export function resource(config) {
+  const list = collection(config);
+  const one = item(config);
+  return (req, res) => {
+    const raw = req.query.id;
+    const id = Array.isArray(raw) ? raw[0] : raw;
+    if (id === undefined || id === null || id === "") return list(req, res);
+    req.query.id = id;
+    return one(req, res);
+  };
+}
+
 export function item(config) {
   return async (req, res) => {
     const id = intId(req.query.id);

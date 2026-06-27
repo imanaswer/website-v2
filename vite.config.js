@@ -23,6 +23,12 @@ function devApi() {
       const dynamic = join(apiDir, ...segs.slice(0, -1), "[id].js");
       if (existsSync(dynamic)) return { file: dynamic, params: { id: segs[segs.length - 1] } };
     }
+    // `/resource/:id` → the resource's `index.js`, passing `id` as a query
+    // param. Mirrors the vercel.json rewrite that does the same in production.
+    if (segs.length >= 2) {
+      const collapsed = join(apiDir, ...segs.slice(0, -1), "index.js");
+      if (existsSync(collapsed)) return { file: collapsed, params: { id: segs[segs.length - 1] } };
+    }
     return null;
   }
 
