@@ -102,10 +102,10 @@ function Hero({ onNavigate }) {
             {facts.map((f, i) => (
               <span key={f} style={{ display: "inline-flex", alignItems: "center", gap: "2.6rem" }}>
                 <span className="label label--on-dark" style={{ color: "var(--cream-100)", letterSpacing: "0.12em" }}>{f}</span>
-                {i < facts.length - 1 && <span aria-hidden style={{ width: 1, height: 12, background: "var(--border-on-dark)" }} />}
+                {i < facts.length - 1 && <span className="ed-hero-sep" aria-hidden style={{ width: 1, height: 12, background: "var(--border-on-dark)" }} />}
               </span>
             ))}
-            <span style={{ marginLeft: "auto", fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "0.95rem", color: "var(--gold-300)" }}>
+            <span className="ed-hero-motto" style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "0.95rem", color: "var(--gold-300)" }}>
               विद्या विनयेन शोभते
             </span>
           </div>
@@ -299,7 +299,7 @@ function Principal({ onNavigate }) {
       <div className="container container--narrow">
         <Reveal>
           <div className="ed-2col" style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "var(--space-12)", alignItems: "start" }}>
-            <div style={{ width: "clamp(120px,18vw,180px)" }}>
+            <div className="principal-photo-wrapper">
               <div className="photo photo-frame">
                 <Img src={IMG.principal} alt="Vimala Jayaraj, Principal" style={{ aspectRatio: "4/5" }} />
               </div>

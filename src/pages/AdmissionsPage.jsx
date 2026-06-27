@@ -73,8 +73,8 @@ function EnquiryForm() {
             ))}
           </dl>
         </Reveal>
-        <Reveal delay={120}>
-          <div style={{ background: "var(--surface-card)", borderRadius: "4px", padding: "clamp(1.6rem,3vw,2.6rem)", border: "1px solid var(--border-strong)", boxShadow: "var(--shadow-sm)" }}>
+        <Reveal delay={120} style={{ width: "100%" }}>
+          <div style={{ width: "100%", maxWidth: "520px", margin: "0 auto", background: "var(--surface-card)", borderRadius: "4px", padding: "clamp(1.6rem,3vw,2.6rem)", border: "1px solid var(--border-strong)", boxShadow: "var(--shadow-sm)" }}>
             {sent ? (
               <div style={{ textAlign: "center", padding: "2rem 0" }}>
                 <Icon name="check-circle" weight="fill" size={48} style={{ color: "var(--green-600)", marginBottom: "1rem" }} />
@@ -84,11 +84,11 @@ function EnquiryForm() {
               </div>
             ) : (
               <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.2rem" }}>
+                <div className="form-grid">
                   <Input label="Parent / Guardian name" required placeholder="Full name" />
                   <Input label="Student name" required placeholder="Child's name" />
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.2rem" }}>
+                <div className="form-grid">
                   <Input label="Mobile" type="tel" required placeholder="10-digit number" icon={<Icon name="phone" size={16} />} />
                   <Input label="Email" type="email" placeholder="you@email.com" icon={<Icon name="envelope-simple" size={16} />} />
                 </div>

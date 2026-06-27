@@ -92,13 +92,13 @@ function PrincipalFeature() {
     <section className="section">
       <div className="container container--narrow">
         <Reveal>
-          <div className="ed-2col" style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "var(--space-12)", alignItems: "center" }}>
-            <div style={{ width: "clamp(130px,18vw,200px)" }}>
+          <div className="ed-2col principal-feature" style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "var(--space-12)", alignItems: "center" }}>
+            <div className="principal-photo-wrapper">
               <div className="photo photo-frame">
                 <Img src={PRINCIPAL} alt="Vimala Jayaraj, Principal" style={{ aspectRatio: "4/5" }} />
               </div>
             </div>
-            <div>
+            <div className="principal-text-wrapper">
               <Label>Leadership</Label>
               <h2 style={{ fontSize: "clamp(1.8rem,1.3rem + 1.8vw,2.8rem)", fontWeight: 400, margin: "1rem 0 0.4rem" }}>Vimala Jayaraj</h2>
               <div className="label" style={{ color: "var(--gold-700)" }}>Principal</div>
@@ -125,7 +125,7 @@ function Department({ dept, index }) {
           </div>
         </Reveal>
         <Reveal>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(168px, 1fr))", gap: "clamp(1.4rem,2.5vw,2.4rem)" }}>
+          <div className="faculty-grid">
             {dept.people.map((p) => <PersonCard key={p.n} p={p} />)}
           </div>
         </Reveal>
