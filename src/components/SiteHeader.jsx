@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const NAV = [
   { id: "home",       label: "Home" },
@@ -47,6 +48,7 @@ export function SiteHeader({ current, onNavigate }) {
             <span style={{ display: "inline-flex", gap: "0.4rem", alignItems: "center", opacity: 0.85 }}>
               <Icon name="map-pin" size={14} /> Mananchira, Kozhikode
             </span>
+            <span className="lang-desktop"><LanguageSwitcher variant="bar" /></span>
           </div>
         </div>
       </div>
@@ -105,6 +107,7 @@ export function SiteHeader({ current, onNavigate }) {
             <div style={{ marginTop: "1rem" }}>
               <Button fullWidth onClick={() => nav("admissions")}>Apply Now</Button>
             </div>
+            <LanguageSwitcher variant="menu" />
           </div>
         )}
 

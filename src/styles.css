@@ -236,6 +236,7 @@ button,input,select,textarea { font: inherit; color: inherit; }
   .ft-grid { grid-template-columns: 1fr 1fr !important; }
 }
 @media (min-width: 901px) { .mobile-nav { display: none !important; } }
+@media (max-width: 900px) { .lang-desktop { display: none !important; } }
 @media (max-width: 560px) {
   .cards-4,.glance-grid,.trust-grid,.fac-grid,.ft-grid { grid-template-columns: 1fr !important; }
   .masonry { column-count: 1 !important; }
@@ -340,4 +341,19 @@ hr.rule, .rule { height: 1px; width: 100%; background: var(--border-subtle); bor
 @media (max-width: 560px) {
   .ed-facts { grid-template-columns: 1fr !important; }
   .ed-hero-facts { gap: 0.5rem 1rem !important; }
+}
+
+/* ── Google Translate widget: hide all of Google's stock UI ──
+   We drive translation from our own LanguageSwitcher, so none of the
+   injected gadget/banner chrome should ever appear. */
+#google_translate_element { display: none !important; }
+.skiptranslate,
+.goog-te-banner-frame,
+.goog-te-gadget,
+.goog-te-balloon-frame { display: none !important; }
+body { top: 0 !important; }            /* Google pushes <body> down for its banner */
+.goog-tooltip, .goog-tooltip:hover { display: none !important; }
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
 }
