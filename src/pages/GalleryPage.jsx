@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Img } from "../components/Img";
 import { Icon } from "../components/Icon";
 import { Reveal } from "../components/Reveal";
@@ -66,11 +66,14 @@ export function GalleryPage({ onNavigate }) {
       <section className="section">
         <div className="container container--wide">
           <Reveal>
-            <div style={{ display: "flex", gap: "clamp(1rem,2.5vw,2.4rem)", flexWrap: "wrap", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "1.1rem", marginBottom: "var(--space-12)" }}>
+            <div 
+              className="utility-bar" 
+              style={{ display: "flex", gap: "clamp(1rem,2.5vw,2.4rem)", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "1.1rem", marginBottom: "var(--space-12)" }}
+            >
               {cats.map((c) => (
                 <button key={c} onClick={() => setCat(c)} style={{
                   position: "relative", background: "none", border: 0, cursor: "pointer", padding: "0 0 0.4rem",
-                  fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "1rem",
+                  fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "1rem", flexShrink: 0,
                   color: cat === c ? "var(--maroon-800)" : "var(--text-muted)", transition: "color var(--dur)",
                 }}>
                   {c}
@@ -80,7 +83,7 @@ export function GalleryPage({ onNavigate }) {
             </div>
           </Reveal>
 
-          <div className="masonry" style={{ columnCount: 3, columnGap: "var(--space-6)" }}>
+          <div className="masonry">
             {shown.map((p, i) => (
               <Reveal key={(p.id ?? p.t) + "-" + i} delay={(i % 6) * 50} style={{ breakInside: "avoid", marginBottom: "var(--space-8)" }}>
                 <figure style={{ margin: 0 }}>

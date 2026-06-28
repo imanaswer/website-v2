@@ -111,7 +111,7 @@ function FacultyNote({ onNavigate }) {
       <div className="container container--narrow">
         <Reveal>
           <div className="ed-2col" style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "var(--space-12)", alignItems: "center" }}>
-            <div style={{ width: "clamp(130px,18vw,190px)" }}>
+            <div className="principal-photo-wrapper">
               <div className="photo photo-frame">
                 <Img src={IMG.principal} alt="Vimala Jayaraj, Principal" style={{ aspectRatio: "4/5" }} />
               </div>

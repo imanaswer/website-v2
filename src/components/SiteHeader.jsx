@@ -37,7 +37,7 @@ export function SiteHeader({ current, onNavigate }) {
     <header style={{ position: "sticky", top: 0, zIndex: 200 }}>
       {/* Utility bar */}
       <div style={{ background: "var(--maroon-900)", color: "var(--cream-100)" }}>
-        <div className="container container--wide" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 40, fontFamily: "var(--font-sans)", fontSize: "0.86rem" }}>
+        <div className="container container--wide utility-bar" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 40, fontFamily: "var(--font-sans)", fontSize: "0.86rem" }}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "var(--gold-300)", fontStyle: "italic", fontFamily: "var(--font-serif)" }}>
             विद्या विनयेन शोभते
           </span>

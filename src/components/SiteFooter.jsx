@@ -52,7 +52,7 @@ export function SiteFooter({ onNavigate }) {
         ])}
       </div>
       <div style={{ borderTop: "1px solid var(--border-on-dark)" }}>
-        <div className="container container--wide" style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem", padding: "1.4rem 0", fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--maroon-200)" }}>
+        <div className="container container--wide ft-bottom" style={{ padding: "1.4rem 0", fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--maroon-200)" }}>
           <span>© 2026 Sri Gujarati Vidyalaya Higher Secondary School</span>
           <span style={{ fontStyle: "italic", fontFamily: "var(--font-serif)", color: "var(--gold-300)" }}>विद्या विनयेन शोभते</span>
         </div>

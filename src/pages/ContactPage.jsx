@@ -53,7 +53,7 @@ function VisitAndMap() {
   return (
     <section className="section" style={{ background: "var(--surface-raised)", paddingTop: 0 }}>
       <div className="container container--wide" style={{ paddingTop: "var(--section-y)" }}>
-        <div className="contact-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-12)", alignItems: "stretch" }}>
+        <div className="contact-grid">
           <Reveal>
             <div>
               <Label>Book a Visit</Label>
@@ -69,7 +69,7 @@ function VisitAndMap() {
               ) : (
                 <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} style={{ display: "flex", flexDirection: "column", gap: "1.2rem", maxWidth: 460 }}>
                   <Input label="Your name" required placeholder="Full name" />
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.2rem" }}>
+                  <div className="form-grid">
                     <Input label="Mobile" type="tel" required placeholder="10-digit number" icon={<Icon name="phone" size={16} />} />
                     <Input label="Preferred date" type="date" />
                   </div>
