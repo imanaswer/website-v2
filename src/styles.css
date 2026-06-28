@@ -410,9 +410,32 @@ textarea {
   .cards-4,
   .glance-grid,
   .trust-grid,
-  .fac-grid,
-  .ft-grid {
+  .fac-grid {
     grid-template-columns: 1fr !important;
+  }
+
+  .ft-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1.5rem 0.5rem !important;
+  }
+  
+  .ft-grid > div:first-child {
+    grid-column: 1 / -1;
+    margin-bottom: 0.5rem;
+  }
+  
+  .ft-grid > div:nth-child(3) {
+    text-align: center;
+  }
+  .ft-grid > div:nth-child(3) ul {
+    align-items: center;
+  }
+  
+  .ft-grid > div:nth-child(4) {
+    text-align: right;
+  }
+  .ft-grid > div:nth-child(4) ul {
+    align-items: flex-end;
   }
 
   .masonry {
