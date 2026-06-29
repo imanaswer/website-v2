@@ -398,6 +398,13 @@ textarea {
   .mobile-nav {
     display: none !important;
   }
+
+  /* The mobile horizontal-scroll on .utility-bar promotes overflow-y to a clip
+     box, which would hide the desktop language-switcher dropdown. The bar only
+     scrolls on small screens, so restore visible overflow on desktop. */
+  .utility-bar {
+    overflow: visible;
+  }
 }
 
 @media (max-width: 900px) {
