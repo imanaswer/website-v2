@@ -63,7 +63,7 @@ export function SiteHeader({ current, onNavigate }) {
       }}>
         <div className="container container--wide" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: scrolled ? 64 : 76, transition: "height var(--dur)" }}>
           <a onClick={() => nav("home")} style={{ cursor: "pointer", display: "flex", alignItems: "center" }}>
-            <img src="/assets/logo-lockup.png" alt="Sri Gujarati Vidyalaya" style={{ height: scrolled ? 34 : 40, transition: "height var(--dur)" }} />
+            <img src="/assets/logo-lockup.png" alt="Sri Gujarati Vidyalaya" style={{ height: scrolled ? 60 : 80, transition: "height var(--dur)" }} />
           </a>
 
           {/* Desktop nav */}

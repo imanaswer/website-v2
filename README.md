@@ -37,7 +37,7 @@ non-technical admin always knows what happened and what to do.
 | Field | Value |
 |-------|-------|
 | **Username** | `admin` |
-| **Password** | _set your own — see [Quick start](#-quick-start)_ |
+| **Password** | _set your own — see [Quick start](#-quick-start)_ |SGV@admin2026
 
 Set `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH`, and `JWT_SECRET` in `.env.local`
 (see [Quick start](#-quick-start)); login works as soon as the env vars are set.
