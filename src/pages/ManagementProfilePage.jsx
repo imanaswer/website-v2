@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
-import { ProfileHeader } from "../components/ProfileHeader";
-import { ProfileSection } from "../components/ProfileSection";
+import { ProfileLayout } from "../components/ProfileLayout";
 import { TextLink, Label } from "../components/Ed";
 import { useApi } from "../lib/useApi";
 import { useDocumentMeta } from "../lib/useDocumentMeta";
@@ -37,23 +36,29 @@ export function ManagementProfilePage({ onNavigate }) {
     );
   }
 
+  const facts = [
+    { label: "Years of service", value: m.years_of_service },
+    { label: "Email", value: m.email ? <a href={`mailto:${m.email}`}>{m.email}</a> : "" },
+  ];
+
+  const details = [
+    { title: "Education", items: lines(m.education) },
+    { title: "Responsibilities", items: lines(m.responsibilities) },
+    { title: "Achievements", items: lines(m.achievements) },
+  ];
+
   return (
-    <div>
-      <ProfileHeader photo={m.photo_url} name={m.name} role={m.position} crumb="School Management" />
-      <section className="section" style={{ paddingTop: 0 }}>
-        <div className="container container--narrow">
-          <ProfileSection title="Biography" text={m.bio} />
-          <ProfileSection title="Message" text={m.message} />
-          <ProfileSection title="Years of Service" text={m.years_of_service} />
-          <ProfileSection title="Education" items={lines(m.education)} />
-          <ProfileSection title="Responsibilities" items={lines(m.responsibilities)} />
-          <ProfileSection title="Achievements" items={lines(m.achievements)} />
-          {m.email && <ProfileSection title="Contact" items={[m.email]} />}
-          <div style={{ marginTop: "var(--space-12)" }}>
-            <TextLink onClick={() => onNavigate("management")}>← School Management</TextLink>
-          </div>
-        </div>
-      </section>
-    </div>
+    <ProfileLayout
+      crumb="School Management"
+      name={m.name}
+      role={m.position}
+      photo={m.photo_url}
+      facts={facts}
+      lead={m.bio}
+      highlight={m.message}
+      details={details}
+      backLabel="School Management"
+      onBack={() => onNavigate("management")}
+    />
   );
 }

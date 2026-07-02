@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
-import { ProfileHeader } from "../components/ProfileHeader";
-import { ProfileSection } from "../components/ProfileSection";
+import { ProfileLayout } from "../components/ProfileLayout";
 import { TextLink, Label } from "../components/Ed";
 import { useApi } from "../lib/useApi";
 import { useDocumentMeta } from "../lib/useDocumentMeta";
@@ -40,27 +39,35 @@ export function FacultyProfilePage({ onNavigate }) {
 
   const subjects = lines(f.subjects);
   const subjectItems = subjects.length ? subjects : (f.subject ? [f.subject] : []);
+  const languages = lines(f.languages);
+
+  const facts = [
+    { label: "Department", value: f.department },
+    { label: "Experience", value: f.experience },
+    { label: "Languages", value: languages.join(" · ") },
+    { label: "Office hours", value: f.office_hours },
+    { label: "Email", value: f.email ? <a href={`mailto:${f.email}`}>{f.email}</a> : "" },
+  ];
+
+  const details = [
+    { title: "Qualification", items: lines(f.qualification) },
+    { title: "Subjects", items: subjectItems },
+    { title: "Areas of Expertise", items: lines(f.expertise) },
+    { title: "Achievements", items: lines(f.achievements) },
+    { title: "Certifications", items: lines(f.certifications) },
+  ];
+
   return (
-    <div>
-      <ProfileHeader photo={f.photo_url} name={f.name} role={role} crumb={f.department || "Faculty"} />
-      <section className="section" style={{ paddingTop: 0 }}>
-        <div className="container container--narrow">
-          <ProfileSection title="About" text={f.bio} />
-          <ProfileSection title="Qualification" items={lines(f.qualification)} />
-          <ProfileSection title="Experience" text={f.experience} />
-          <ProfileSection title="Subjects" items={subjectItems} />
-          <ProfileSection title="Areas of Expertise" items={lines(f.expertise)} />
-          <ProfileSection title="Achievements" items={lines(f.achievements)} />
-          <ProfileSection title="Certifications" items={lines(f.certifications)} />
-          <ProfileSection title="Languages Known" items={lines(f.languages)} />
-          {(f.email || f.office_hours) && (
-            <ProfileSection title="Contact" items={[f.email, f.office_hours && `Office hours: ${f.office_hours}`].filter(Boolean)} />
-          )}
-          <div style={{ marginTop: "var(--space-12)" }}>
-            <TextLink onClick={() => onNavigate("faculty")}>← All faculty</TextLink>
-          </div>
-        </div>
-      </section>
-    </div>
+    <ProfileLayout
+      crumb="Faculty"
+      name={f.name}
+      role={role}
+      photo={f.photo_url}
+      facts={facts}
+      lead={f.bio}
+      details={details}
+      backLabel="All faculty"
+      onBack={() => onNavigate("faculty")}
+    />
   );
 }
