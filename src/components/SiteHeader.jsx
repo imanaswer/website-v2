@@ -8,6 +8,7 @@ const NAV = [
   { id: "about",      label: "Heritage" },
   { id: "academics",  label: "Academics" },
   { id: "faculty",    label: "Faculty" },
+  { id: "management", label: "Management" },
   { id: "admissions", label: "Admissions" },
   { id: "gallery",    label: "Campus" },
   { id: "alumni",     label: "Alumni" },

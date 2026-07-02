@@ -7,6 +7,9 @@ import { HomePage } from "./pages/HomePage";
 import { HeritagePage } from "./pages/HeritagePage";
 import { AcademicsPage } from "./pages/AcademicsPage";
 import { FacultyPage } from "./pages/FacultyPage";
+import { FacultyProfilePage } from "./pages/FacultyProfilePage";
+import { ManagementPage } from "./pages/ManagementPage";
+import { ManagementProfilePage } from "./pages/ManagementProfilePage";
 import { AdmissionsPage } from "./pages/AdmissionsPage";
 import { GalleryPage } from "./pages/GalleryPage";
 import { AlumniPage } from "./pages/AlumniPage";
@@ -20,7 +23,7 @@ import { AdminApp } from "./admin/AdminApp.jsx";
 const ID_TO_PATH = {
   home: "/", about: "/heritage", academics: "/academics", faculty: "/faculty",
   admissions: "/admissions", gallery: "/campus", alumni: "/alumni",
-  careers: "/careers", contact: "/contact",
+  careers: "/careers", contact: "/contact", management: "/management",
 };
 const PATH_TO_ID = Object.fromEntries(Object.entries(ID_TO_PATH).map(([id, p]) => [p, id]));
 
@@ -42,6 +45,9 @@ function PublicSite() {
           <Route path="/heritage" element={<HeritagePage onNavigate={onNavigate} />} />
           <Route path="/academics" element={<AcademicsPage onNavigate={onNavigate} />} />
           <Route path="/faculty" element={<FacultyPage onNavigate={onNavigate} />} />
+          <Route path="/faculty/:slug" element={<FacultyProfilePage onNavigate={onNavigate} />} />
+          <Route path="/management" element={<ManagementPage onNavigate={onNavigate} />} />
+          <Route path="/management/:slug" element={<ManagementProfilePage onNavigate={onNavigate} />} />
           <Route path="/admissions" element={<AdmissionsPage onNavigate={onNavigate} />} />
           <Route path="/campus" element={<GalleryPage onNavigate={onNavigate} />} />
           <Route path="/alumni" element={<AlumniPage onNavigate={onNavigate} />} />
