@@ -24,14 +24,18 @@ export function filterSortGroup(people, { query = "", department = "", sort = "d
   let list = people.filter((p) => p.active);
   if (q) list = list.filter((p) => p.name.toLowerCase().includes(q));
   if (department) list = list.filter((p) => p.department === department);
-  if (sort === "name-asc") list = [...list].sort((a, b) => a.name.localeCompare(b.name));
-  else if (sort === "name-desc") list = [...list].sort((a, b) => b.name.localeCompare(a.name));
 
+  // Group by first-seen department order — stable regardless of sort.
   const order = [];
   const map = new Map();
   for (const p of list) {
     if (!map.has(p.department)) { map.set(p.department, []); order.push(p.department); }
     map.get(p.department).push(p);
   }
-  return order.map((name) => ({ name, people: map.get(name) }));
+
+  // Sort only WITHIN each group, never across groups.
+  const cmp = sort === "name-asc" ? (a, b) => a.name.localeCompare(b.name)
+            : sort === "name-desc" ? (a, b) => b.name.localeCompare(a.name)
+            : null;
+  return order.map((name) => ({ name, people: cmp ? [...map.get(name)].sort(cmp) : map.get(name) }));
 }

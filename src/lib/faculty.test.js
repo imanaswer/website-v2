@@ -42,3 +42,14 @@ test("name-asc sorts within groups", () => {
   const groups = filterSortGroup(many, { query: "", department: "", sort: "name-asc" });
   assert.deepEqual(groups[0].people.map((p) => p.name), ["Ann", "Zed"]);
 });
+
+test("name sort reorders within groups but keeps department order stable", () => {
+  const people = normalizeFaculty([
+    { id: 1, name: "Zed", department: "Languages", active: true },
+    { id: 2, name: "Bea", department: "Sciences", active: true },
+    { id: 3, name: "Ann", department: "Languages", active: true },
+  ]);
+  const groups = filterSortGroup(people, { query: "", department: "", sort: "name-asc" });
+  assert.deepEqual(groups.map((g) => g.name), ["Languages", "Sciences"]); // group order unchanged
+  assert.deepEqual(groups[0].people.map((p) => p.name), ["Ann", "Zed"]);  // sorted within group
+});
