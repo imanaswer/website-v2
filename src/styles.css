@@ -770,3 +770,7 @@ body { top: 0 !important; }
   grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
   gap: clamp(1.4rem, 2.5vw, 2.4rem);
 }
+
+.profile-card-link { transition: transform var(--dur, .2s) var(--ease-out, ease); }
+.profile-card-link:hover { transform: translateY(-3px); }
+.profile-card-link:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 4px; }
