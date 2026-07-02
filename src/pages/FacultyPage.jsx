@@ -1,8 +1,11 @@
+import { useMemo, useState } from "react";
 import { Img } from "../components/Img";
 import { Reveal } from "../components/Reveal";
 import { PageHero } from "../components/PageHero";
 import { TextLink, Label } from "../components/Ed";
 import { useApi } from "../lib/useApi";
+import { normalizeFaculty, departmentsOf, filterSortGroup } from "../lib/faculty";
+import { ProfileCard } from "../components/ProfileCard";
 
 const BASE = "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/";
 const HERO = "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/Faculty_.jpg";
@@ -61,29 +64,42 @@ const FALLBACK_DEPARTMENTS = DEPARTMENTS.map((d) => ({
   people: d.people.map((p) => ({ ...p, img: BASE + p.img })),
 }));
 
-/* Group API faculty rows into departments, preserving sort order. */
-function buildDepartments(rows) {
-  const order = [];
-  const map = new Map();
-  for (const r of rows) {
-    const dept = r.department || "Faculty";
-    if (!map.has(dept)) { map.set(dept, []); order.push(dept); }
-    map.get(dept).push({ n: r.name, s: r.subject || "", img: r.photo_url || "" });
+/* Flatten the curated fallback into normalizeFaculty's row shape (no ids -> not
+ * clickable) so the same pipeline drives both DB and fallback content. */
+function fallbackRows() {
+  const rows = [];
+  for (const d of FALLBACK_DEPARTMENTS) {
+    for (const p of d.people) rows.push({ name: p.n, subject: p.s, department: d.name, photo_url: p.img, active: true });
   }
-  return order.map((name) => ({ name, people: map.get(name) }));
+  return rows;
 }
 
-function PersonCard({ p }) {
+function Toolbar({ query, setQuery, department, setDepartment, sort, setSort, departments }) {
   return (
-    <figure style={{ margin: 0 }}>
-      <div className="photo photo-frame">
-        <Img src={p.img} alt={`${p.n}, ${p.s}`} style={{ aspectRatio: "1/1" }} />
-      </div>
-      <figcaption style={{ marginTop: "0.9rem" }}>
-        <div style={{ fontFamily: "var(--font-serif)", fontSize: "1.2rem", color: "var(--text-primary)", lineHeight: 1.25 }}>{p.n}</div>
-        <div className="label" style={{ marginTop: "0.35rem", color: "var(--gold-700)" }}>{p.s}</div>
-      </figcaption>
-    </figure>
+    <div className="faculty-toolbar" style={{ display: "flex", flexWrap: "wrap", gap: "1rem", alignItems: "flex-end" }}>
+      <label style={{ flex: "1 1 220px", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+        <span className="label">Search</span>
+        <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by name" aria-label="Search faculty by name"
+          style={{ padding: "0.7rem 0.9rem", border: "1px solid var(--border-strong)", borderRadius: 8, fontFamily: "var(--font-sans)", fontSize: "1rem", background: "var(--surface-card)" }} />
+      </label>
+      <label style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+        <span className="label">Department</span>
+        <select value={department} onChange={(e) => setDepartment(e.target.value)} aria-label="Filter by department"
+          style={{ padding: "0.7rem 0.9rem", border: "1px solid var(--border-strong)", borderRadius: 8, fontFamily: "var(--font-sans)", fontSize: "1rem", background: "var(--surface-card)" }}>
+          <option value="">All departments</option>
+          {departments.map((d) => <option key={d} value={d}>{d}</option>)}
+        </select>
+      </label>
+      <label style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+        <span className="label">Sort</span>
+        <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Sort faculty"
+          style={{ padding: "0.7rem 0.9rem", border: "1px solid var(--border-strong)", borderRadius: 8, fontFamily: "var(--font-sans)", fontSize: "1rem", background: "var(--surface-card)" }}>
+          <option value="default">Default order</option>
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+        </select>
+      </label>
+    </div>
   );
 }
 
@@ -126,7 +142,9 @@ function Department({ dept, index }) {
         </Reveal>
         <Reveal>
           <div className="faculty-grid">
-            {dept.people.map((p) => <PersonCard key={p.n} p={p} />)}
+            {dept.people.map((p) => (
+              <ProfileCard key={p.id ?? p.name} person={{ id: p.id, name: p.name, photo: p.photo, role: p.subject }} basePath="/faculty" />
+            ))}
           </div>
         </Reveal>
       </div>
@@ -155,7 +173,17 @@ function FacultyCTA({ onNavigate }) {
 
 export function FacultyPage({ onNavigate }) {
   const { data } = useApi("faculty");
-  const departments = Array.isArray(data) && data.length ? buildDepartments(data) : FALLBACK_DEPARTMENTS;
+  const [query, setQuery] = useState("");
+  const [department, setDepartment] = useState("");
+  const [sort, setSort] = useState("default");
+
+  const people = useMemo(
+    () => normalizeFaculty(Array.isArray(data) && data.length ? data : fallbackRows()),
+    [data]
+  );
+  const departments = useMemo(() => departmentsOf(people), [people]);
+  const groups = useMemo(() => filterSortGroup(people, { query, department, sort }), [people, query, department, sort]);
+
   return (
     <div>
       <PageHero onNavigate={onNavigate} crumb="Faculty" eyebrow="Our Faculty"
@@ -163,7 +191,17 @@ export function FacultyPage({ onNavigate }) {
         lead="A dedicated faculty across languages, the sciences, commerce, computing and the arts — guided by our Principal, Vimala Jayaraj."
         image={HERO} />
       <PrincipalFeature />
-      {departments.map((dept, i) => <Department key={dept.name} dept={dept} index={i} />)}
+      <section className="section" style={{ paddingBottom: 0 }}>
+        <div className="container container--wide">
+          <Toolbar query={query} setQuery={setQuery} department={department} setDepartment={setDepartment}
+            sort={sort} setSort={setSort} departments={departments} />
+        </div>
+      </section>
+      {groups.length === 0 ? (
+        <section className="section"><div className="container container--wide"><p style={{ color: "var(--text-secondary)" }}>No faculty match your search.</p></div></section>
+      ) : (
+        groups.map((dept, i) => <Department key={dept.name} dept={dept} index={i} />)
+      )}
       <FacultyCTA onNavigate={onNavigate} />
     </div>
   );
