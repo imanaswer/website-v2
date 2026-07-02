@@ -30,7 +30,12 @@ const PATH_TO_ID = Object.fromEntries(Object.entries(ID_TO_PATH).map(([id, p]) =
 function PublicSite() {
   const navigate = useNavigate();
   const location = useLocation();
-  const current = PATH_TO_ID[location.pathname] || (location.pathname.startsWith("/careers") ? "careers" : "home");
+  const p = location.pathname;
+  const current = PATH_TO_ID[p]
+    || (p.startsWith("/careers") ? "careers"
+      : p.startsWith("/faculty") ? "faculty"
+      : p.startsWith("/management") ? "management"
+      : "home");
 
   const onNavigate = (id) => navigate(typeof id === "string" && id.startsWith("/") ? id : ID_TO_PATH[id] || "/");
 

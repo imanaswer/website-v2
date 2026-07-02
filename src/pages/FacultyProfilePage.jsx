@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import { PageHero } from "../components/PageHero";
 import { ProfileHeader } from "../components/ProfileHeader";
 import { ProfileSection } from "../components/ProfileSection";
 import { TextLink, Label } from "../components/Ed";
