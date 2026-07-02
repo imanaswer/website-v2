@@ -67,8 +67,23 @@ function jobPosting(job, { origin } = {}) {
   return node;
 }
 
-/* Registry of schema.org builders. Add Article/Event/Person here later. */
-export const JSONLD_BUILDERS = { JobPosting: jobPosting };
+/* Minimal Person node for a faculty/management profile. */
+function person(entity, { origin } = {}) {
+  if (!entity || !entity.name) return null;
+  const node = {
+    "@context": "https://schema.org/",
+    "@type": "Person",
+    name: entity.name,
+    jobTitle: entity.designation || entity.position || undefined,
+    worksFor: organizationNode(origin),
+  };
+  if (entity.photo_url) node.image = absoluteUrl(origin, entity.photo_url);
+  if (entity.email) node.email = entity.email;
+  return node;
+}
+
+/* Registry of schema.org builders. Add Article/Event here later. */
+export const JSONLD_BUILDERS = { JobPosting: jobPosting, Person: person };
 
 /* Entity-agnostic JSON-LD entry point. Unknown type or null result → null. */
 export function buildJsonLd(schemaType, entity, ctx = {}) {

@@ -52,3 +52,23 @@ test("metaConfig exposes table + filter for the server", () => {
   assert.equal(cfg.publicFilter, "published");
   assert.equal(cfg.lookupField, "id");
 });
+
+test("faculty resolver builds titled OG + canonical", () => {
+  const meta = resolveMetadata(
+    "faculty",
+    { id: 7, name: "Anjali Nair", designation: "Senior Mathematics Teacher", bio: "Loves calculus.", photo_url: "/p.jpg" },
+    { origin: "https://x.test" }
+  );
+  assert.equal(meta.title, "Anjali Nair — Senior Mathematics Teacher — Sri Gujarati Vidyalaya");
+  assert.equal(meta.canonical, "https://x.test/faculty/anjali-nair-7");
+});
+
+test("management resolver falls back to position when no bio", () => {
+  const meta = resolveMetadata(
+    "management",
+    { id: 3, name: "Harshad Shah", position: "President" },
+    { origin: "https://x.test" }
+  );
+  assert.equal(meta.canonical, "https://x.test/management/harshad-shah-3");
+  assert.ok(meta.description.length > 0);
+});
