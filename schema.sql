@@ -18,7 +18,19 @@ create table if not exists faculty (
   subject     text,
   department  text,
   photo_url   text,
-  sort_order  integer not null default 0
+  sort_order  integer not null default 0,
+  designation text,
+  qualification text,
+  subjects text,
+  experience text,
+  bio text,
+  expertise text,
+  achievements text,
+  certifications text,
+  languages text,
+  email text,
+  office_hours text,
+  active boolean not null default true
 );
 
 create table if not exists jobs (
@@ -53,4 +65,20 @@ create table if not exists gallery (
   video_url   text,
   sort_order  integer not null default 0,
   created_at  timestamptz not null default now()
+);
+
+create table if not exists management (
+  id serial primary key,
+  name text not null,
+  position text,
+  photo_url text,
+  bio text,
+  message text,
+  years_of_service text,
+  education text,
+  responsibilities text,
+  achievements text,
+  email text,
+  sort_order integer not null default 0,
+  active boolean not null default true
 );

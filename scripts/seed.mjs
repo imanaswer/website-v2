@@ -57,8 +57,8 @@ async function run() {
   await sql`delete from faculty`;
   let i = 0;
   for (const [name, subject, dept, photo] of faculty) {
-    await sql`insert into faculty (name, subject, department, photo_url, sort_order)
-              values (${name}, ${subject}, ${dept}, ${photo}, ${i++})`;
+    await sql`insert into faculty (name, subject, department, photo_url, sort_order, active)
+              values (${name}, ${subject}, ${dept}, ${photo}, ${i++}, true)`;
   }
 
   console.log("Seeding news…");
