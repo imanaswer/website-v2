@@ -68,16 +68,16 @@ export function SiteHeader({ current, onNavigate }) {
           </a>
 
           {/* Desktop nav */}
-          <nav className="desk-nav" style={{ display: "flex", alignItems: "center", gap: "0.2rem" }}>
+          <nav className="desk-nav" style={{ display: "flex", alignItems: "center", flex: "1 1 auto", justifyContent: "center", gap: "0.1rem", margin: "0 clamp(0.5rem, 1.2vw, 1.25rem)" }}>
             {NAV.map((n) => (
               <a key={n.id} onClick={() => nav(n.id)}
-                style={{ position: "relative", cursor: "pointer", padding: "0.5rem 0.95rem", fontFamily: "var(--font-sans)", fontSize: "1rem", fontWeight: 600, color: current === n.id ? "var(--maroon-800)" : "var(--ink-700)" }}
+                style={{ position: "relative", cursor: "pointer", padding: "0.5rem 0.55rem", fontFamily: "var(--font-sans)", fontSize: "0.94rem", fontWeight: 600, whiteSpace: "nowrap", color: current === n.id ? "var(--maroon-800)" : "var(--ink-700)" }}
                 onMouseEnter={(e) => { if (current !== n.id) e.currentTarget.style.color = "var(--maroon-700)"; }}
                 onMouseLeave={(e) => { if (current !== n.id) e.currentTarget.style.color = "var(--ink-700)"; }}
               >
                 {n.label}
                 <span style={{
-                  position: "absolute", left: "0.9rem", right: "0.9rem", bottom: "0.15rem", height: 2,
+                  position: "absolute", left: "0.5rem", right: "0.5rem", bottom: "0.15rem", height: 2,
                   borderRadius: 2, background: "var(--gold-500)",
                   transform: current === n.id ? "scaleX(1)" : "scaleX(0)",
                   transformOrigin: "left", transition: "transform var(--dur) var(--ease-out)",

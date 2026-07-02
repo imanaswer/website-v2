@@ -357,14 +357,6 @@ textarea {
     column-count: 2 !important;
   }
 
-  .desk-nav {
-    display: none !important;
-  }
-
-  .burger {
-    display: flex !important;
-  }
-
   .about-grid,
   .fac-layout,
   .principal-grid,
@@ -395,15 +387,28 @@ textarea {
 }
 
 @media (min-width: 901px) {
-  .mobile-nav {
-    display: none !important;
-  }
-
   /* The mobile horizontal-scroll on .utility-bar promotes overflow-y to a clip
      box, which would hide the desktop language-switcher dropdown. The bar only
      scrolls on small screens, so restore visible overflow on desktop. */
   .utility-bar {
     overflow: visible;
+  }
+}
+
+/* Main nav collapses to a burger below 1200px: with 9 items + the full logo
+   lockup, the desktop nav only fits comfortably on wider screens. Kept separate
+   from the 900px grid/utility-bar breakpoints, which are unrelated. */
+@media (max-width: 1200px) {
+  .desk-nav {
+    display: none !important;
+  }
+  .burger {
+    display: flex !important;
+  }
+}
+@media (min-width: 1201px) {
+  .mobile-nav {
+    display: none !important;
   }
 }
 
