@@ -8,7 +8,7 @@ import { normalizeFaculty, departmentsOf, filterSortGroup } from "../lib/faculty
 import { ProfileCard } from "../components/ProfileCard";
 
 const BASE = "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/";
-const HERO = "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/Faculty_.jpg";
+const HERO = "/assets/photos/classroom.jpg";
 const PRINCIPAL = "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/05/vimala-jayaraj.jpg";
 
 /* Real faculty — names, subjects and photos published on the school's site. */

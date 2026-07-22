@@ -8,7 +8,7 @@ import { PageHero } from "../components/PageHero";
 import { Label } from "../components/Ed";
 
 const IMG = {
-  campus: "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/gujarati-school.jpg",
+  campus: "/assets/photos/campus-entrance.jpg",
 };
 
 function Details() {

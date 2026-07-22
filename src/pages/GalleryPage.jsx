@@ -6,13 +6,17 @@ import { PageHero } from "../components/PageHero";
 import { useApi } from "../lib/useApi";
 
 const IMG = {
-  campus:    "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/gujarati-school.jpg",
-  a1:        "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/progrm.jpg",
-  a2:        "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13.jpg",
-  faculty:   "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/Faculty_.jpg",
-  program:   "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/progrm.jpg",
-  n1:        "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/05/n1.jpg",
-  n2:        "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/05/n2.jpg",
+  campus:    "/assets/photos/campus-entrance.jpg",
+  grounds:   "/assets/photos/campus-grounds.jpg",
+  classroom: "/assets/photos/classroom.jpg",
+  smartboard:"/assets/photos/smartboard.jpg",
+  science:   "/assets/photos/science-lab.jpg",
+  computer:  "/assets/photos/computer-lab.jpg",
+  library1:  "/assets/photos/library-girls.jpg",
+  library2:  "/assets/photos/library-boys.jpg",
+  walking:   "/assets/photos/students-walking.jpg",
+  gate:      "/assets/photos/school-gate.jpg",
+  football:  "/assets/photos/football.jpg",
   news_plusone: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2024/06/plusone.jpeg",
   news_mla:  "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/1-31.jpg",
   news_yoga: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13.jpg",
@@ -24,16 +28,20 @@ const IMG = {
 const FALLBACK = [
   { src: IMG.campus,       cat: "Campus",       t: "The main campus" },
   { src: IMG.news_yoga,    cat: "Celebrations", t: "International Yoga Day" },
-  { src: IMG.a1,           cat: "Academics",    t: "In the classroom" },
+  { src: IMG.classroom,    cat: "Academics",    t: "In the classroom" },
   { src: IMG.news_ocean,   cat: "Arts",         t: "World Ocean Day" },
-  { src: IMG.faculty,      cat: "Campus",       t: "Our teachers" },
+  { src: IMG.smartboard,   cat: "Academics",    t: "Our teachers" },
   { src: IMG.news_env,     cat: "Celebrations", t: "World Environment Day" },
-  { src: IMG.a2,           cat: "Academics",    t: "Learning together" },
+  { src: IMG.library1,     cat: "Academics",    t: "Learning together" },
   { src: IMG.news_mla,     cat: "Sports",       t: "Excellence Award" },
-  { src: IMG.program,      cat: "Arts",         t: "Activities & programmes" },
-  { src: IMG.n1,           cat: "Sports",       t: "On the field" },
+  { src: IMG.science,      cat: "Academics",    t: "In the science lab" },
+  { src: IMG.football,     cat: "Sports",       t: "On the field" },
   { src: IMG.news_plusone, cat: "Academics",    t: "Plus One" },
-  { src: IMG.n2,           cat: "Celebrations", t: "A school event" },
+  { src: IMG.gate,         cat: "Campus",       t: "A new school day" },
+  { src: IMG.computer,     cat: "Academics",    t: "The computer lab" },
+  { src: IMG.library2,     cat: "Academics",    t: "In the library" },
+  { src: IMG.walking,      cat: "Campus",       t: "Off to class" },
+  { src: IMG.grounds,      cat: "Campus",       t: "The school grounds" },
 ].map((p) => ({ ...p, kind: "photo" }));
 
 function mapGallery(rows) {
@@ -61,7 +69,7 @@ export function GalleryPage({ onNavigate }) {
       <PageHero onNavigate={onNavigate} crumb="Campus" eyebrow="Campus Life"
         title="Moments from our campus"
         lead="A glimpse of everyday life at Sri Gujarati Vidyalaya — classrooms, celebrations, sport and the green campus our students call home."
-        image={IMG.faculty} />
+        image={IMG.classroom} />
 
       <section className="section">
         <div className="container container--wide">

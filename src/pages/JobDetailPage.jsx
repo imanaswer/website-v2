@@ -7,7 +7,7 @@ import { useApi } from "../lib/useApi";
 import { useDocumentMeta } from "../lib/useDocumentMeta";
 import { parseTrailingId, slugify, SITE_NAME } from "../../shared/meta/index.js";
 
-const FALLBACK_HERO = "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/Faculty_.jpg";
+const FALLBACK_HERO = "/assets/photos/classroom.jpg";
 
 function fmtDate(d) {
   if (!d) return "";

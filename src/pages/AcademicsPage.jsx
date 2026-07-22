@@ -6,7 +6,7 @@ import { TextLink, Label } from "../components/Ed";
 
 const IMG = {
   principal: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/05/vimala-jayaraj.jpg",
-  program:   "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/progrm.jpg",
+  program:   "/assets/photos/smartboard.jpg",
 };
 
 function Approach() {

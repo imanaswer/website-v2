@@ -10,7 +10,7 @@ import { PageHero } from "../components/PageHero";
 import { Label } from "../components/Ed";
 
 const IMG = {
-  a2: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13.jpg",
+  a2: "/assets/photos/library-girls.jpg",
 };
 
 function Journey() {

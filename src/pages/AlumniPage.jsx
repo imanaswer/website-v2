@@ -5,7 +5,7 @@ import { PageHero } from "../components/PageHero";
 import { TextLink, Label } from "../components/Ed";
 import { useApi } from "../lib/useApi";
 
-const HERO = "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13.jpg";
+const HERO = "/assets/photos/students-girls.jpg";
 
 function Silhouette() {
   return (

@@ -6,7 +6,7 @@ import { useApi } from "../lib/useApi";
 import { useDocumentMeta } from "../lib/useDocumentMeta";
 import { SITE_NAME } from "../../shared/meta/index.js";
 
-const HERO = "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/Faculty_.jpg";
+const HERO = "/assets/photos/classroom.jpg";
 
 export function ManagementPage({ onNavigate }) {
   const { data } = useApi("management");

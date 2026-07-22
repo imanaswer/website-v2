@@ -18,10 +18,8 @@ function mapNews(row) {
 }
 
 const IMG = {
-  campus:    "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/gujarati-school.jpg",
-  students:  "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/progrm.jpg",
-  life:      "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13.jpg",
-  faculty:   "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/Faculty_.jpg",
+  campus:    "/assets/photos/campus-entrance.jpg",
+  faculty:   "/assets/photos/classroom.jpg",
   principal: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/05/vimala-jayaraj.jpg",
   news_plusone: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2024/06/plusone.jpeg",
   news_mla:  "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/1-31.jpg",
