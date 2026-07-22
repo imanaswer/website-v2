@@ -8,7 +8,7 @@ import { PageHero } from "../components/PageHero";
 import { Label } from "../components/Ed";
 
 const IMG = {
-  campus: "/assets/photos/campus-entrance.jpg",
+  campus: "/assets/photos/arrival.jpg",
 };
 
 function Details() {

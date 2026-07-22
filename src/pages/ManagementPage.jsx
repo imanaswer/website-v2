@@ -6,7 +6,7 @@ import { useApi } from "../lib/useApi";
 import { useDocumentMeta } from "../lib/useDocumentMeta";
 import { SITE_NAME } from "../../shared/meta/index.js";
 
-const HERO = "/assets/photos/classroom.jpg";
+const HERO = "/assets/photos/science-demo.jpg";
 
 export function ManagementPage({ onNavigate }) {
   const { data } = useApi("management");

@@ -19,7 +19,7 @@ function mapNews(row) {
 
 const IMG = {
   campus:    "/assets/photos/campus-entrance.jpg",
-  faculty:   "/assets/photos/classroom.jpg",
+  walking:   "/assets/photos/students-walking.jpg",
   principal: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/05/vimala-jayaraj.jpg",
   news_plusone: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2024/06/plusone.jpeg",
   news_mla:  "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/1-31.jpg",
@@ -258,7 +258,7 @@ function Campus({ onNavigate }) {
         <div className="ed-2col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-16)", alignItems: "center" }}>
           <Reveal>
             <div className="photo photo-frame" style={{ borderRadius: "2px" }}>
-              <Img src={IMG.faculty} alt="Students and teachers on the Sri Gujarati Vidyalaya campus" style={{ aspectRatio: "5/4" }} />
+              <Img src={IMG.walking} alt="Students and teachers on the Sri Gujarati Vidyalaya campus" style={{ aspectRatio: "5/4" }} />
             </div>
           </Reveal>
           <Reveal delay={100}>

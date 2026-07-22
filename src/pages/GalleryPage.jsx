@@ -69,7 +69,7 @@ export function GalleryPage({ onNavigate }) {
       <PageHero onNavigate={onNavigate} crumb="Campus" eyebrow="Campus Life"
         title="Moments from our campus"
         lead="A glimpse of everyday life at Sri Gujarati Vidyalaya — classrooms, celebrations, sport and the green campus our students call home."
-        image={IMG.classroom} />
+        image={IMG.football} />
 
       <section className="section">
         <div className="container container--wide">

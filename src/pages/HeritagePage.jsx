@@ -4,7 +4,7 @@ import { PageHero } from "../components/PageHero";
 import { TextLink, Label } from "../components/Ed";
 
 const IMG = {
-  campus: "/assets/photos/campus-entrance.jpg",
+  campus: "/assets/photos/campus-grounds.jpg",
   a1:     "/assets/photos/school-gate.jpg",
 };
 

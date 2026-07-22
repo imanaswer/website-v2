@@ -37,7 +37,7 @@ export function PageHero({ eyebrow, title, lead, image, onNavigate, crumb }) {
       </section>
 
       {image && (
-        <div className="photo photo-frame" style={{ position: "relative", height: "clamp(280px,42vh,520px)" }}>
+        <div className="photo photo-frame" style={{ position: "relative", height: "clamp(340px,54vh,660px)" }}>
           <Img src={image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
         </div>
       )}

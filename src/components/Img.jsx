@@ -26,7 +26,7 @@ export function Img({ src, alt = "", style, className, overlay }) {
         src={src}
         alt={alt}
         onError={() => setErr(true)}
-        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%", display: "block" }}
       />
       {overlay && <div style={{ position: "absolute", inset: 0, background: overlay }} />}
     </div>

@@ -5,7 +5,7 @@ import { TextLink, Label } from "../components/Ed";
 import { useApi } from "../lib/useApi";
 import { slugify } from "../../shared/meta/index.js";
 
-const HERO = "/assets/photos/classroom.jpg";
+const HERO = "/assets/photos/reading-desk.jpg";
 
 /* Vacancies are managed in the admin panel (/admin/jobs) — published roles
  * appear here; when there are none, the "no current openings" state shows. */
