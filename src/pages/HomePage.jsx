@@ -20,13 +20,13 @@ function mapNews(row) {
 const IMG = {
   campus:    "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/gujarati-school.jpg",
   students:  "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/progrm.jpg",
-  life:      "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13-555x472.jpg",
+  life:      "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13.jpg",
   faculty:   "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/Faculty_.jpg",
   principal: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/05/vimala-jayaraj.jpg",
-  news_plusone: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2024/06/plusone-555x555.jpeg",
-  news_mla:  "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/1-31-555x472.jpg",
-  news_yoga: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13-555x472.jpg",
-  news_ocean:"https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/3-18-555x472.jpg",
+  news_plusone: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2024/06/plusone.jpeg",
+  news_mla:  "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/1-31.jpg",
+  news_yoga: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13.jpg",
+  news_ocean:"https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/3-18.jpg",
 };
 
 /* Background loop for the hero. Drop the file at public/hero.mp4 — it's served

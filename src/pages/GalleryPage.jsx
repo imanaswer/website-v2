@@ -8,16 +8,16 @@ import { useApi } from "../lib/useApi";
 const IMG = {
   campus:    "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/gujarati-school.jpg",
   a1:        "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/progrm.jpg",
-  a2:        "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13-555x472.jpg",
+  a2:        "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13.jpg",
   faculty:   "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/Faculty_.jpg",
   program:   "https://www.srigujaratividhyalaya.com/wp-content/themes/gujarati/images/progrm.jpg",
   n1:        "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/05/n1.jpg",
   n2:        "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/05/n2.jpg",
-  news_plusone: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2024/06/plusone-555x555.jpeg",
-  news_mla:  "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/1-31-555x472.jpg",
-  news_yoga: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13-555x472.jpg",
-  news_ocean:"https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/3-18-555x472.jpg",
-  news_env:  "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/2-21-555x472.jpg",
+  news_plusone: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2024/06/plusone.jpeg",
+  news_mla:  "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/1-31.jpg",
+  news_yoga: "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/4-13.jpg",
+  news_ocean:"https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/3-18.jpg",
+  news_env:  "https://www.srigujaratividhyalaya.com/wp-content/uploads/2023/07/2-21.jpg",
 };
 
 /* Curated fallback used until the gallery is populated in the admin. */
