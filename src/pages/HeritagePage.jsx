@@ -5,7 +5,7 @@ import { TextLink, Label } from "../components/Ed";
 
 const IMG = {
   campus: "/assets/photos/campus-entrance.jpg",
-  a1:     "/assets/photos/campus-grounds.jpg",
+  a1:     "/assets/photos/school-gate.jpg",
 };
 
 function Story({ onNavigate }) {
